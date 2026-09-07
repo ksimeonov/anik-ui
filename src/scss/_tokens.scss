@@ -1,0 +1,31 @@
+// Runtime token layer (D-010). Every utility references these custom properties
+// rather than hard-coding a literal, so a consumer can retheme the whole scale
+// without rebuilding the Sass.
+
+:root {
+  // Spacing scale (D-019). --ak-space-0 is 0, never a surprise value.
+  --ak-space-0: 0;
+  --ak-space-2xs: 0.125rem; // 2px
+  --ak-space-xs: 0.25rem; // 4px
+  --ak-space-sm: 0.5rem; // 8px
+  --ak-space-md: 1rem; // 16px
+  --ak-space-lg: 1.5rem; // 24px
+  --ak-space-xl: 2rem; // 32px
+  --ak-space-2xl: 3rem; // 48px
+  --ak-space-3xl: 4rem; // 64px
+
+  // Typography sizes with paired line-heights (D-031).
+  --ak-font-size-xs: 0.75rem;
+  --ak-font-size-sm: 0.875rem;
+  --ak-font-size-md: 1rem;
+  --ak-font-size-lg: 1.25rem;
+  --ak-font-size-xl: 1.5rem;
+  --ak-font-size-2xl: 2rem;
+
+  --ak-line-height-xs: 1.5;
+  --ak-line-height-sm: 1.5;
+  --ak-line-height-md: 1.5;
+  --ak-line-height-lg: 1.4;
+  --ak-line-height-xl: 1.3;
+  --ak-line-height-2xl: 1.2;
+}

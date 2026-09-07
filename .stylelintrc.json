@@ -8,8 +8,10 @@
       }
     ],
     "declaration-no-important": true,
-    "scss/dollar-variable-pattern": "^ak-[a-z0-9]+(-[a-z0-9]+)*$",
-    "custom-property-pattern": "^ak-[a-z0-9]+(-[a-z0-9]+)*$"
+    "scss/dollar-variable-pattern": "^_?[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+    "scss/dollar-variable-empty-line-before": null,
+    "custom-property-pattern": "^ak-[a-z0-9]+(-[a-z0-9]+)*$",
+    "custom-property-empty-line-before": null
   },
   "overrides": [
     {

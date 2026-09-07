@@ -1,0 +1,28 @@
+// EMISSION ORDER 1 — the box-sizing rule (D-025, spec 07).
+
+// `box-sizing: border-box` is required for padding utilities and layout
+// primitives to behave as documented. It ships here, in the core stylesheet,
+// scoped to AniK-owned classes — NOT in the optional reset and NOT on `*` — so
+// the utilities are self-sufficient whether or not the reset is imported.
+
+// The list is generated from the same padding matrix the utilities use, so it
+// cannot drift. Declaration test (spec 11 §2) asserts every padding utility and
+// layout primitive appears here.
+
+@use 'sass:list';
+@use 'config';
+
+// Padding property tokens, mirrored in _utilities.scss.
+$_padding-tokens: 'p' 'px' 'py' 'pt' 'pb' 'ps' 'pe';
+
+$_selectors: '.ak-row, .ak-row > *, .ak-page, .ak-cq, .ak-flex, .ak-inline-flex';
+
+@each $token in $_padding-tokens {
+  @each $step in config.$space-steps {
+    $_selectors: '#{$_selectors}, .ak-#{$token}-#{$step}';
+  }
+}
+
+#{$_selectors} {
+  box-sizing: border-box;
+}

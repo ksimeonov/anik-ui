@@ -1,0 +1,36 @@
+// EMISSION ORDER 2 — base / structural classes.
+// Exact declarations from spec 04 and spec 02. The three details in `.ak-row`
+// are load-bearing and covered by declaration tests (spec 11 §2).
+
+.ak-row {
+  display: grid;
+
+  // minmax(0, 1fr), never plain 1fr: 1fr === minmax(auto, 1fr) and a wide
+  // <pre>/<table>/long string would blow out the track.
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+
+  // Default gap is 0. Routing it through a custom property is what makes
+  // responsive gap possible without shipping responsive gap utilities.
+  gap: var(--ak-row-gap, 0);
+}
+
+// Fixing the track is not enough — a grid item's automatic minimum is
+// min-content in the inline axis and it will overflow its own area without this.
+.ak-row > * {
+  min-width: 0;
+}
+
+// Centred, token-driven page-width wrapper (D-022). Named `ak-page`, never
+// `ak-container`: "container" means a query container in this system.
+.ak-page {
+  width: 100%;
+  max-width: var(--ak-page-max, 75rem);
+  margin-inline: auto;
+  padding-inline: var(--ak-page-gutter, var(--ak-space-md));
+}
+
+// Establishes a query container. See the containment caveats in spec 02 /
+// the README before putting this above a fixed-position element.
+.ak-cq {
+  container-type: inline-size;
+}

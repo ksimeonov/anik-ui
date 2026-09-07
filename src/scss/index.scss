@@ -7,26 +7,29 @@
  * override component CSS via documented source order. Only the optional reset is
  * layered. See mvp-plan/16-cascade-and-browser-support.md.
  *
- * EMISSION ORDER (load-bearing — asserted in CI, see 16-cascade-and-browser-support.md):
- *   1. box-sizing rule for layout + padding utilities
- *   2. base/structural classes    (ak-row, ak-page, ak-cq)
- *   3. unprefixed utilities       (all families, default values)
- *   4. @media (min-width: 576px)  — sm
- *   5. @media (min-width: 768px)  — md
- *   6. @media (min-width: 992px)  — lg
- *   7. @media (min-width: 1200px) — xl
- *   8. @container (min-width: 320px) — c-sm
- *   9. @container (min-width: 480px) — c-md
- *  10. @container (min-width: 640px) — c-lg
- *  11. @container (min-width: 800px) — c-xl
+ * The @use order below IS the emission order, and it is load-bearing — several
+ * behaviours are pure source-order effects and are asserted in CI:
  *
- * The `@forward`/`@use` lines below are added in Phase 2 in exactly this order.
- * Nothing outside 15-class-api-matrix.md (the 396-class contract) is generated.
+ *   1. box-sizing rule for layout + padding utilities   (_box-sizing.scss)
+ *   2. base / structural classes: ak-row, ak-page, ak-cq (_base.scss)
+ *   3. unprefixed utilities, all families, default values (_utilities.scss)
+ *   4. @media (min-width: 576px)  — sm      \
+ *   5. @media (min-width: 768px)  — md       |
+ *   6. @media (min-width: 992px)  — lg       |  (_variants.scss)
+ *   7. @media (min-width: 1200px) — xl       |
+ *   8. @container (min-width: 320px) — c-sm  |
+ *   9. @container (min-width: 480px) — c-md  |
+ *  10. @container (min-width: 640px) — c-lg  |
+ *  11. @container (min-width: 800px) — c-xl /
+ *
+ * The generated class set is exactly the 396 classes in
+ * mvp-plan/15-class-api-matrix.md — nothing added, nothing renamed.
  */
 
-// Phase 2 — core implementation plugs in here:
-// @use 'tokens';          // --ak-space-*, --ak-font-size-*, --ak-line-height-*
-// @use 'box-sizing';      // generated selector list (D-025)
-// @use 'base';            // ak-row, ak-page, ak-cq
-// @use 'utilities';       // default (unprefixed) values, all families
-// @use 'responsive';      // @media sm→xl, then @container c-sm→c-xl
+// _tokens.scss emits the :root custom-property block; _config / _generators
+// carry no CSS. Ordering here therefore controls the whole stylesheet.
+@use 'tokens';
+@use 'box-sizing';
+@use 'base';
+@use 'utilities';
+@use 'variants';

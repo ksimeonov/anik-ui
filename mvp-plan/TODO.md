@@ -75,39 +75,50 @@ Legend:
 
 ## Phase 2 — Core implementation
 
-- [ ] Tokens (`--ak-space-*`, `--ak-font-size-*`, `--ak-line-height-*`)
-- [ ] Generated `box-sizing` selector list
-- [ ] `ak-row` (`minmax(0, 1fr)` + `min-width: 0` on children + `--ak-row-gap`)
-- [ ] `ak-page`
-- [ ] `ak-cq`
-- [ ] column utilities + `ak-col-auto`
-- [ ] viewport-responsive columns
-- [ ] container-query columns
-- [ ] gap (`ak-gap`, `ak-gap-x`, `ak-gap-y`)
-- [ ] margin (7 tokens × 10 values)
-- [ ] padding (7 tokens × 9 values)
-- [ ] display/visibility family + variants
-- [ ] `ak-sr-only`
-- [ ] flex direction (`ak-dir-*`) + variants
-- [ ] flex sizing (`ak-flex-1`, `ak-grow`, `ak-shrink`)
-- [ ] flex wrap
-- [ ] alignment utilities (`ak-items-*`, `ak-justify-*`, `ak-self-*`)
-- [ ] typography utilities
-- [ ] positioning utilities
-- [ ] optional reset (layered)
+All 396 classes now compile. Source is split into `_tokens` → `_box-sizing` →
+`_base` → `_utilities` → `_variants`, `@use`d from `index.scss` in that order
+(the emission order). Shared generators (`_generators.scss`) back both the
+default classes and the variant blocks, so a viewport variant and its container
+counterpart are provably identical apart from the at-rule wrapper.
+
+- [x] Tokens (`--ak-space-*`, `--ak-font-size-*`, `--ak-line-height-*`) — `_tokens.scss`
+- [x] Generated `box-sizing` selector list — `_box-sizing.scss`, 69 selectors (6 primitives + 63 padding)
+- [x] `ak-row` (`repeat(12, minmax(0, 1fr))` + `min-width: 0` on children + `gap: var(--ak-row-gap, 0)`)
+- [x] `ak-page`
+- [x] `ak-cq`
+- [x] column utilities + `ak-col-auto`
+- [x] viewport-responsive columns — `@media` sm→xl
+- [x] container-query columns — `@container` c-sm→c-xl
+- [x] gap (`ak-gap`, `ak-gap-x`, `ak-gap-y`)
+- [x] margin (7 tokens × 10 values)
+- [x] padding (7 tokens × 9 values)
+- [x] display/visibility family + variants
+- [x] `ak-sr-only`
+- [x] flex direction (`ak-dir-*`) + variants
+- [x] flex sizing (`ak-flex-1`, `ak-grow`, `ak-shrink`)
+- [x] flex wrap
+- [x] alignment utilities (`ak-items-*`, `ak-justify-*`, `ak-self-*`) — `start`/`end` values so they work on `ak-row` and `ak-flex` alike
+- [x] typography utilities
+- [x] positioning utilities
+- [x] optional reset (layered) — completed in Phase 1 (`reset.scss`, spec 07 verbatim)
+
+Tests added (`node --test`, 21 passing): API snapshot (`api/classes.txt`, 396),
+declaration tests (spec 11 §2), emission-order test (§3), size-budget test
+(§4 — `anik-ui.min.css` 3.6 KB gz / 25 KB, `anik-reset.min.css` 0.6 KB gz / 2 KB).
 
 ## Phase 3 — Validation
 
 Acceptance gates, not activities. Each has a pass condition.
 
-- [ ] Build succeeds from clean checkout (`rm -rf node_modules dist && npm ci && npm run build`)
-- [ ] Stylelint passes with zero warnings
-- [ ] `prettier --check` passes
-- [ ] API snapshot test passes and `api/classes.txt` contains exactly **396** classes
-- [ ] Declaration tests pass (see `11-playground-and-testing.md` §2)
-- [ ] Emission-order test passes (`@media` ascending, `@container` last)
-- [ ] Size budget: `anik-ui.min.css` ≤ 25 KB gz, `anik-reset.min.css` ≤ 2 KB gz
-- [ ] `npm pack --dry-run` contains only `dist/`, `src/scss/`, README, LICENSE, CHANGELOG
+- [x] Build succeeds from clean checkout (`rm -rf node_modules dist && npm ci && npm run build`)
+- [x] Stylelint passes with zero warnings
+- [x] `prettier --check` passes
+- [x] API snapshot test passes and `api/classes.txt` contains exactly **396** classes
+- [x] Declaration tests pass (see `11-playground-and-testing.md` §2)
+- [x] Emission-order test passes (`@media` ascending, `@container` last)
+- [x] Size budget: `anik-ui.min.css` ≤ 25 KB gz, `anik-reset.min.css` ≤ 2 KB gz
+- [x] `npm pack --dry-run` contains only `dist/`, `src/scss/`, README, LICENSE, CHANGELOG
+      — CHANGELOG absent until the release pipeline generates it; `files` already lists it
 - [ ] Playground manually verified against the browser checklist
 - [ ] Responsive checks: Chrome, Firefox, Safari, one iOS Safari at the support floor
 - [ ] Container-query checks, including `ak-cq` + `ak-row` on the same element
@@ -146,7 +157,12 @@ Outstanding before moving on:
 2. Maintainer: decide repository host (D-038) — needed for Phase 4, not for Phase 2/3.
 3. Commit the Phase 1 bootstrap (includes `package-lock.json`).
 
-**Next implementation work — Phase 2**, starting with tokens
-(`--ak-space-*`, `--ak-font-size-*`, `--ak-line-height-*`). Follow
-`15-class-api-matrix.md` exactly: 396 classes, nothing added, nothing renamed.
-After the first utilities compile, run `npm run api:update` to seed `api/classes.txt`.
+**Phase 2 is complete** — all 396 classes compile, `api/classes.txt` is seeded,
+21 tests pass, and the automated Phase 3 gates (clean build, lint, format, API
+snapshot, declaration, emission-order, size budget, npm pack) are green.
+
+**Next: the remaining Phase 3 gates**, which are all manual / consumer-project
+work — build the playground demos (spec 11), then the browser checklist,
+tarball-into-consumer checks (plain HTML, Angular with both Sass entrypoint
+forms, React/Vue), import-order check, and the RTL spot check. Phase 4 (release
+automation) still waits on D-038 (repo host) and the npm name reservation.

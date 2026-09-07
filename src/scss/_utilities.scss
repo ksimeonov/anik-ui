@@ -1,0 +1,248 @@
+// EMISSION ORDER 3 — unprefixed utilities, every family, default values.
+// The @media / @container variants come after this, in _variants.scss.
+
+@use 'config';
+@use 'generators';
+
+// ---------------------------------------------------------------------------
+// Columns (default) — variants in _variants.scss
+// ---------------------------------------------------------------------------
+@include generators.columns;
+
+// ---------------------------------------------------------------------------
+// Display / visibility (default) — variants in _variants.scss
+// ---------------------------------------------------------------------------
+@include generators.display-family;
+
+// Accessible hiding: visually gone, still in the accessibility tree. Standard
+// clip-rect implementation (spec 06). No variants.
+.ak-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// ---------------------------------------------------------------------------
+// Flex — direction (default, variants in _variants.scss), then the rest
+// ---------------------------------------------------------------------------
+@include generators.directions;
+
+.ak-flex-wrap {
+  flex-wrap: wrap;
+}
+
+.ak-flex-nowrap {
+  flex-wrap: nowrap;
+}
+
+// flex-basis: 0% makes siblings equal-width regardless of content...
+.ak-flex-1 {
+  flex: 1 1 0%;
+}
+
+// ...flex-auto keeps a content-based basis. Both are needed (spec 05).
+.ak-flex-auto {
+  flex: 1 1 auto;
+}
+
+.ak-flex-none {
+  flex: 0 0 auto;
+}
+
+.ak-grow {
+  flex-grow: 1;
+}
+
+.ak-grow-0 {
+  flex-grow: 0;
+}
+
+.ak-shrink {
+  flex-shrink: 1;
+}
+
+.ak-shrink-0 {
+  flex-shrink: 0;
+}
+
+// ---------------------------------------------------------------------------
+// Alignment — display-agnostic: valid on ak-row and ak-flex alike (spec 05).
+// `start` / `end` (not `flex-start`) so the same class works for grid and flex.
+// ---------------------------------------------------------------------------
+$_align-items: (
+  'start': start,
+  'center': center,
+  'end': end,
+  'stretch': stretch,
+  'baseline': baseline
+);
+
+@each $name, $value in $_align-items {
+  .ak-items-#{$name} {
+    align-items: $value;
+  }
+}
+
+$_justify-content: (
+  'start': start,
+  'center': center,
+  'end': end,
+  'between': space-between
+);
+
+@each $name, $value in $_justify-content {
+  .ak-justify-#{$name} {
+    justify-content: $value;
+  }
+}
+
+$_align-self: (
+  'auto': auto,
+  'start': start,
+  'center': center,
+  'end': end,
+  'stretch': stretch
+);
+
+@each $name, $value in $_align-self {
+  .ak-self-#{$name} {
+    align-self: $value;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Typography — sizes ship a paired line-height (spec 06). No font-family, ever.
+// ---------------------------------------------------------------------------
+@each $size in config.$text-sizes {
+  .ak-text-#{$size} {
+    font-size: var(--ak-font-size-#{$size});
+    line-height: var(--ak-line-height-#{$size});
+  }
+}
+
+.ak-text-start {
+  text-align: start;
+}
+
+.ak-text-center {
+  text-align: center;
+}
+
+.ak-text-end {
+  text-align: end;
+}
+
+.ak-font-bold {
+  font-weight: 700;
+}
+
+// Undoes inherited boldness inside a heading / <strong> / <th> — a different job
+// from a weight ramp (D-031).
+.ak-font-normal {
+  font-weight: 400;
+}
+
+// ---------------------------------------------------------------------------
+// Spacing — 160 classes (spec 03 / D-024). Logical properties throughout:
+// s/e = inline-start/inline-end (RTL-aware), t/b = block-start/block-end.
+// Every value is a token reference; `auto` (margin only) is the one literal.
+// ---------------------------------------------------------------------------
+$_padding-properties: (
+  'p': padding,
+  'px': padding-inline,
+  'py': padding-block,
+  'pt': padding-block-start,
+  'pb': padding-block-end,
+  'ps': padding-inline-start,
+  'pe': padding-inline-end
+);
+
+$_margin-properties: (
+  'm': margin,
+  'mx': margin-inline,
+  'my': margin-block,
+  'mt': margin-block-start,
+  'mb': margin-block-end,
+  'ms': margin-inline-start,
+  'me': margin-inline-end
+);
+
+$_gap-properties: (
+  'gap': gap,
+  'gap-x': column-gap,
+  'gap-y': row-gap
+);
+
+@each $token, $property in $_padding-properties {
+  @each $step in config.$space-steps {
+    .ak-#{$token}-#{$step} {
+      #{$property}: var(--ak-space-#{$step});
+    }
+  }
+}
+
+@each $token, $property in $_margin-properties {
+  @each $step in config.$space-steps {
+    .ak-#{$token}-#{$step} {
+      #{$property}: var(--ak-space-#{$step});
+    }
+  }
+
+  .ak-#{$token}-auto {
+    #{$property}: auto;
+  }
+}
+
+@each $token, $property in $_gap-properties {
+  @each $step in config.$space-steps {
+    .ak-#{$token}-#{$step} {
+      #{$property}: var(--ak-space-#{$step});
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Position — logical offsets, consistent with spacing and text alignment.
+// No z-index utilities in MVP (spec 06).
+// ---------------------------------------------------------------------------
+.ak-relative {
+  position: relative;
+}
+
+.ak-absolute {
+  position: absolute;
+}
+
+.ak-fixed {
+  position: fixed;
+}
+
+.ak-sticky {
+  position: sticky;
+}
+
+.ak-top-0 {
+  inset-block-start: 0;
+}
+
+.ak-bottom-0 {
+  inset-block-end: 0;
+}
+
+.ak-start-0 {
+  inset-inline-start: 0;
+}
+
+.ak-end-0 {
+  inset-inline-end: 0;
+}
+
+.ak-inset-0 {
+  inset: 0;
+}
