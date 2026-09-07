@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AniK UI — Playground</title>
+
+    <!-- Import order: reset, then demo presentation CSS, then AniK UI utilities. -->
+    <link rel="stylesheet" href="../dist/anik-reset.css" />
+    <link rel="stylesheet" href="./demo.css" />
+    <link rel="stylesheet" href="../dist/anik-ui.css" />
+  </head>
+  <body>
+    <header class="demo-header">
+      <h1>AniK UI Playground</h1>
+      <p>
+        Plain HTML + a small <code>demo.css</code> for presentation only. Run
+        <code>npm run build</code> first so <code>../dist/</code> exists.
+      </p>
+    </header>
+
+    <main>
+      <!-- Phase 3 fills these in. Each section is a required demonstration
+           from mvp-plan/11-playground-and-testing.md. -->
+      <section id="row-columns">
+        <h2>Row &amp; columns (nested, &gt;12 children)</h2>
+      </section>
+      <section id="responsive"><h2>Responsive layout</h2></section>
+      <section id="container-queries">
+        <h2>Container queries (ak-cq + ak-row together)</h2>
+      </section>
+      <section id="containment-caveat">
+        <h2>ak-fixed inside ak-cq — containment caveat</h2>
+      </section>
+      <section id="spacing">
+        <h2>Spacing &amp; the --ak-row-gap escape hatch</h2>
+      </section>
+      <section id="flex">
+        <h2>Flex — fixed sidebar + filling main (ak-flex-1)</h2>
+      </section>
+      <section id="alignment"><h2>Alignment</h2></section>
+      <section id="typography"><h2>Typography</h2></section>
+      <section id="positioning"><h2>Positioning</h2></section>
+      <section id="visibility">
+        <h2>Visibility — hide at one size, restore at another</h2>
+      </section>
+      <section id="sr-only"><h2>ak-sr-only</h2></section>
+      <section id="reset"><h2>Reset on vs. off</h2></section>
+    </main>
+  </body>
+</html>

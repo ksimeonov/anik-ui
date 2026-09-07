@@ -1,0 +1,43 @@
+/*
+ * Presentation only. NOT published (see package.json "files" and .npmignore
+ * rules in mvp-plan/08-build-and-package.md). Nothing here should be needed to
+ * make AniK UI classes work — it exists to make the demo legible.
+ */
+:root {
+  color-scheme: light dark;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  padding: 2rem;
+  max-width: 72rem;
+  margin-inline: auto;
+}
+
+.demo-header {
+  margin-block-end: 2rem;
+}
+
+section {
+  border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-block-end: 1.5rem;
+}
+
+section > h2 {
+  margin-block-start: 0;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.7;
+}
+
+/* Visualise layout boxes without affecting AniK UI behaviour. */
+.demo-box {
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  border: 1px dashed color-mix(in srgb, currentColor 30%, transparent);
+  padding: 0.5rem;
+  text-align: center;
+}

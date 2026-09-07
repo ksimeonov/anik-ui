@@ -1,0 +1,26 @@
+{
+  "name": "anik-ui",
+  "version": "0.0.1",
+  "description": "Name placeholder for AniK UI — a tiny, framework-agnostic CSS layout and utility system. The real package ships from the main repository.",
+  "keywords": [
+    "css",
+    "scss",
+    "layout",
+    "grid",
+    "flexbox",
+    "container-queries",
+    "utilities"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/kristian90s/ui.git"
+  },
+  "homepage": "https://gitlab.com/kristian90s/ui",
+  "files": [
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
