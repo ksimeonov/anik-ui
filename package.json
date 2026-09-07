@@ -62,6 +62,8 @@
     "test": "node --test",
     "test:api": "node scripts/extract-api.mjs --check",
     "api:update": "node scripts/extract-api.mjs --write",
+    "local:registry": "npx --yes verdaccio@^6 --config .verdaccio/config.yaml",
+    "local:publish": "node scripts/local-publish.mjs",
     "prepare": "husky"
   },
   "devDependencies": {

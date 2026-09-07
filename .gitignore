@@ -21,3 +21,7 @@ npm-debug.log*
 # env / credentials
 .env
 .env.*
+
+# local Verdaccio registry (config is tracked, runtime state is not)
+.verdaccio/*
+!.verdaccio/config.yaml

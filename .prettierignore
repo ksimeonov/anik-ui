@@ -4,3 +4,4 @@ package-lock.json
 CHANGELOG.md
 api/classes.txt
 mvp-plan/
+.verdaccio/
