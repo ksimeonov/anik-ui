@@ -46,6 +46,64 @@
       </section>
       <section id="sr-only"><h2>ak-sr-only</h2></section>
       <section id="reset"><h2>Reset on vs. off</h2></section>
+
+      <!-- Sizing (D-039 / D-040) — implemented, not a Phase 3 stub. -->
+      <section id="sizing">
+        <h2>Sizing</h2>
+
+        <h3>ak-w-full / ak-w-fit</h3>
+        <p class="demo-box ak-w-full">
+          <code>ak-w-full</code> — fills the inline axis.
+        </p>
+        <p class="demo-box ak-w-fit">
+          <code>ak-w-fit</code> — shrinks to content, capped by the parent.
+        </p>
+
+        <h3>ak-min-w-0 — the flex overflow fix</h3>
+        <p>
+          Both rows hold the same unbreakable string. Only the second one is
+          contained, because a flex child's automatic minimum size is
+          <code>min-content</code> until <code>ak-min-w-0</code> overrides it.
+          <code>ak-row</code> does this for its children automatically.
+        </p>
+
+        <p><strong>Without</strong> <code>ak-min-w-0</code> — overflows:</p>
+        <div class="ak-flex ak-gap-md ak-mb-md">
+          <aside class="demo-box ak-flex-none">Sidebar</aside>
+          <main class="demo-box ak-flex-1">
+            <code
+              >Loremipsumdolorsitametconsecteturadipiscingelitseddoeiusmodtemporincididunt</code
+            >
+          </main>
+        </div>
+
+        <p><strong>With</strong> <code>ak-min-w-0</code> — contained:</p>
+        <div class="ak-flex ak-gap-md">
+          <aside class="demo-box ak-flex-none">Sidebar</aside>
+          <main class="demo-box ak-flex-1 ak-min-w-0">
+            <code
+              >Loremipsumdolorsitametconsecteturadipiscingelitseddoeiusmodtemporincididunt</code
+            >
+          </main>
+        </div>
+
+        <h3>ak-min-h-screen vs ak-h-screen</h3>
+        <p>
+          Both read <code>--ak-viewport-block</code> (default
+          <code>100dvb</code>). The <code>min-</code> variant is the one you
+          usually want: it fills the viewport but still grows for taller content
+          instead of clipping it. Resize / scroll on a phone to see
+          <code>dvb</code> track the browser chrome.
+        </p>
+        <div
+          class="demo-box ak-min-h-screen ak-flex ak-items-center ak-justify-center ak-text-center"
+        >
+          <span
+            ><code>ak-min-h-screen</code> — fills the viewport, grows if the
+            content is taller.</span
+          >
+        </div>
+      </section>
     </main>
   </body>
 </html>

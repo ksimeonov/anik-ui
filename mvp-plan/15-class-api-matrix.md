@@ -169,6 +169,39 @@ Spec: [`06-typography-position-visibility.md`](06-typography-position-visibility
 
 Subtotal: **9**
 
+## 9. Sizing
+
+Spec: D-039 / D-040 in [`DECISIONS.md`](DECISIONS.md)
+
+| Class | Property | Variants | Count |
+|---|---|---|---|
+| `ak-w-full` | `inline-size: 100%` | no | 1 |
+| `ak-w-auto` | `inline-size: auto` | no | 1 |
+| `ak-w-fit` | `inline-size: fit-content` | no | 1 |
+| `ak-max-w-full` | `max-inline-size: 100%` | no | 1 |
+| `ak-min-w-0` | `min-inline-size: 0` | no | 1 |
+| `ak-h-full` | `block-size: 100%` | no | 1 |
+| `ak-h-auto` | `block-size: auto` | no | 1 |
+| `ak-h-screen` | `block-size: var(--ak-viewport-block)` | no | 1 |
+| `ak-min-h-screen` | `min-block-size: var(--ak-viewport-block)` | no | 1 |
+| `ak-min-h-0` | `min-block-size: 0` | no | 1 |
+
+`w` / `h` are the **inline** and **block** axes — the class names keep the familiar
+spelling while the declarations use logical properties, exactly as `ak-pt-*` emits
+`padding-block-start` (D-020). A logical class spelling is unavailable because
+`ak-inline*` is the display family.
+
+`--ak-viewport-block` defaults to `100dvb` and is the supported override point for
+consumers who prefer stable `100svb` sizing (D-040).
+
+`ak-w-screen` is intentionally **not** generated — `100dvi` includes the scrollbar and
+causes horizontal overflow.
+
+All ten also appear in the generated `box-sizing` selector list (D-025), which is
+therefore 79 selectors: 6 layout primitives + 63 padding utilities + 10 sizing.
+
+Subtotal: **10**
+
 ## Totals
 
 | Group | Classes |
@@ -181,7 +214,8 @@ Subtotal: **9**
 | Spacing | 160 |
 | Typography | 11 |
 | Position | 9 |
-| **Total** | **396** |
+| Sizing | 10 |
+| **Total** | **406** |
 
 This number is asserted in CI (see [`11-playground-and-testing.md`](11-playground-and-testing.md)).
 A change to it is a deliberate API change, not an implementation detail.

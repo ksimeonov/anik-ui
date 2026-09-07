@@ -2,11 +2,11 @@
 
 A tiny, framework-agnostic CSS layout and utility system: a 12-column CSS Grid
 `row`, viewport- and container-query responsive columns, spacing, flexbox,
-alignment, typography and positioning utilities.
+alignment, typography, sizing and positioning utilities.
 
 - **CSS-first.** No JavaScript runtime in the package.
 - **Framework agnostic.** Angular, React, Vue, Svelte, plain HTML.
-- **Bounded API.** Exactly 396 generated classes, enumerated and enforced in CI.
+- **Bounded API.** Exactly 406 generated classes, enumerated and enforced in CI.
 - **No unexpected global styles.** The reset is opt-in and never auto-enabled.
 
 > **Status: pre-release.** The class API is being implemented against
@@ -100,6 +100,64 @@ change across breakpoints, drive the token from your own stylesheet:
 ```html
 <div class="ak-row card-grid">…</div>
 ```
+
+## Sizing
+
+Ten utilities, no breakpoint variants. The class names keep the familiar `w` / `h`
+spelling; the declarations use logical properties, so they are writing-mode
+correct like the rest of the library.
+
+| Class             | Declaration                                |
+| ----------------- | ------------------------------------------ |
+| `ak-w-full`       | `inline-size: 100%`                        |
+| `ak-w-auto`       | `inline-size: auto`                        |
+| `ak-w-fit`        | `inline-size: fit-content`                 |
+| `ak-max-w-full`   | `max-inline-size: 100%`                    |
+| `ak-min-w-0`      | `min-inline-size: 0`                       |
+| `ak-h-full`       | `block-size: 100%`                         |
+| `ak-h-auto`       | `block-size: auto`                         |
+| `ak-h-screen`     | `block-size: var(--ak-viewport-block)`     |
+| `ak-min-h-screen` | `min-block-size: var(--ak-viewport-block)` |
+| `ak-min-h-0`      | `min-block-size: 0`                        |
+
+### Full-viewport sections — reach for `ak-min-h-screen`
+
+`ak-h-screen` sets a fixed height, so content taller than the viewport is
+**clipped**. For a hero or a full-page section, `ak-min-h-screen` is almost
+always what you want:
+
+```html
+<section class="ak-min-h-screen ak-flex ak-items-center ak-justify-center">
+  …
+</section>
+```
+
+Both read `--ak-viewport-block`, which defaults to `100dvb` — the _dynamic_
+viewport, so it tracks mobile browser chrome showing and hiding. If you would
+rather have a size that never reflows mid-scroll, override it once:
+
+```css
+:root {
+  --ak-viewport-block: 100svb; /* small viewport: stable, never reflows */
+}
+```
+
+### `ak-min-w-0` — the flex overflow fix
+
+`ak-row` already sets `min-width: 0` on its children, so long unbroken content
+cannot blow out a grid track. Flex containers deliberately do **not** get this
+automatically, because it would change flex sizing for every consumer. Apply it
+yourself when a flex child holds text, a `<pre>`, or a table that might not wrap:
+
+```html
+<div class="ak-flex ak-gap-md">
+  <aside class="ak-flex-none">Sidebar</aside>
+  <main class="ak-flex-1 ak-min-w-0">…long unbroken content…</main>
+</div>
+```
+
+`ak-w-screen` is deliberately **not** provided: `100vw` includes the scrollbar
+width and causes horizontal overflow.
 
 ## Containment caveat
 

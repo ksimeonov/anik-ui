@@ -1,6 +1,7 @@
 // EMISSION ORDER 3 — unprefixed utilities, every family, default values.
 // The @media / @container variants come after this, in _variants.scss.
 
+@use 'sass:list';
 @use 'config';
 @use 'generators';
 
@@ -204,6 +205,18 @@ $_gap-properties: (
     .ak-#{$token}-#{$step} {
       #{$property}: var(--ak-space-#{$step});
     }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Sizing (D-039) — familiar w/h class names, logical properties underneath.
+// No breakpoint variants (D-024); responsive sizing uses the token layer.
+// ak-min-w-0 is the opt-in fix for flex children overflowing on long content —
+// ak-row does this automatically for its children, ak-flex deliberately does not.
+// ---------------------------------------------------------------------------
+@each $name, $spec in config.$sizing {
+  .ak-#{$name} {
+    #{list.nth($spec, 1)}: list.nth($spec, 2);
   }
 }
 

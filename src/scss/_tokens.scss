@@ -28,4 +28,10 @@
   --ak-line-height-lg: 1.4;
   --ak-line-height-xl: 1.3;
   --ak-line-height-2xl: 1.2;
+
+  // Full-viewport block size, used by ak-h-screen / ak-min-h-screen (D-040).
+  // Dynamic by default: tracks mobile browser chrome showing and hiding, which
+  // is what "100vh" is usually meant to do. Override with 100svb for stable
+  // sizing that never reflows mid-scroll.
+  --ak-viewport-block: 100dvb;
 }

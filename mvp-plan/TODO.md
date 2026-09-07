@@ -33,7 +33,8 @@ Legend:
 - [x] Browser support floor (D-027)
 - [x] Emission order specified (D-028)
 - [x] Variant matrix bounded (D-024)
-- [x] Full public class matrix — 396 classes (`15-class-api-matrix.md`)
+- [x] Full public class matrix — 396 classes (`15-class-api-matrix.md`); extended to
+      406 by D-039 (sizing family)
 - [x] Deprecation policy (D-037)
 - [x] MIT license
 - [x] Public npm registry
@@ -75,14 +76,15 @@ Legend:
 
 ## Phase 2 — Core implementation
 
-All 396 classes now compile. Source is split into `_tokens` → `_box-sizing` →
+All 406 classes now compile — 396 at MVP definition plus the 10 sizing utilities
+added by D-039. Source is split into `_tokens` → `_box-sizing` →
 `_base` → `_utilities` → `_variants`, `@use`d from `index.scss` in that order
 (the emission order). Shared generators (`_generators.scss`) back both the
 default classes and the variant blocks, so a viewport variant and its container
 counterpart are provably identical apart from the at-rule wrapper.
 
 - [x] Tokens (`--ak-space-*`, `--ak-font-size-*`, `--ak-line-height-*`) — `_tokens.scss`
-- [x] Generated `box-sizing` selector list — `_box-sizing.scss`, 69 selectors (6 primitives + 63 padding)
+- [x] Generated `box-sizing` selector list — `_box-sizing.scss`, 79 selectors (6 primitives + 63 padding + 10 sizing)
 - [x] `ak-row` (`repeat(12, minmax(0, 1fr))` + `min-width: 0` on children + `gap: var(--ak-row-gap, 0)`)
 - [x] `ak-page`
 - [x] `ak-cq`
@@ -101,8 +103,11 @@ counterpart are provably identical apart from the at-rule wrapper.
 - [x] typography utilities
 - [x] positioning utilities
 - [x] optional reset (layered) — completed in Phase 1 (`reset.scss`, spec 07 verbatim)
+- [x] sizing utilities (D-039) + `--ak-viewport-block` token (D-040) — `ak-w-*`,
+      `ak-h-*`, `ak-max-w-full`, `ak-min-w-0`, `ak-min-h-0`, `ak-h-screen`,
+      `ak-min-h-screen`; no breakpoint variants, all in the box-sizing list
 
-Tests added (`node --test`, 21 passing): API snapshot (`api/classes.txt`, 396),
+Tests added (`node --test`, 25 passing): API snapshot (`api/classes.txt`, 406),
 declaration tests (spec 11 §2), emission-order test (§3), size-budget test
 (§4 — `anik-ui.min.css` 3.6 KB gz / 25 KB, `anik-reset.min.css` 0.6 KB gz / 2 KB).
 
@@ -113,7 +118,7 @@ Acceptance gates, not activities. Each has a pass condition.
 - [x] Build succeeds from clean checkout (`rm -rf node_modules dist && npm ci && npm run build`)
 - [x] Stylelint passes with zero warnings
 - [x] `prettier --check` passes
-- [x] API snapshot test passes and `api/classes.txt` contains exactly **396** classes
+- [x] API snapshot test passes and `api/classes.txt` contains exactly **406** classes
 - [x] Declaration tests pass (see `11-playground-and-testing.md` §2)
 - [x] Emission-order test passes (`@media` ascending, `@container` last)
 - [x] Size budget: `anik-ui.min.css` ≤ 25 KB gz, `anik-reset.min.css` ≤ 2 KB gz
@@ -157,9 +162,14 @@ Outstanding before moving on:
 2. Maintainer: decide repository host (D-038) — needed for Phase 4, not for Phase 2/3.
 3. Commit the Phase 1 bootstrap (includes `package-lock.json`).
 
-**Phase 2 is complete** — all 396 classes compile, `api/classes.txt` is seeded,
-21 tests pass, and the automated Phase 3 gates (clean build, lint, format, API
+**Phase 2 is complete** — all 406 classes compile, `api/classes.txt` is seeded,
+25 tests pass, and the automated Phase 3 gates (clean build, lint, format, API
 snapshot, declaration, emission-order, size budget, npm pack) are green.
+
+**Post-MVP extension landed:** the sizing family (D-039) and the
+`--ak-viewport-block` token (D-040) — `ak-w-*`, `ak-h-*`, `ak-max-w-full`,
+`ak-min-w-0`, `ak-min-h-0`, `ak-h-screen`, `ak-min-h-screen`. Overflow utilities
+were reconsidered at the same time and deliberately left deferred.
 
 **Next: the remaining Phase 3 gates**, which are all manual / consumer-project
 work — build the playground demos (spec 11), then the browser checklist,

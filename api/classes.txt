@@ -192,6 +192,9 @@ ak-gap-y-xl
 ak-gap-y-xs
 ak-grow
 ak-grow-0
+ak-h-auto
+ak-h-full
+ak-h-screen
 ak-hidden
 ak-hidden-c-lg
 ak-hidden-c-md
@@ -248,6 +251,7 @@ ak-m-md
 ak-m-sm
 ak-m-xl
 ak-m-xs
+ak-max-w-full
 ak-mb-0
 ak-mb-2xl
 ak-mb-2xs
@@ -268,6 +272,9 @@ ak-me-md
 ak-me-sm
 ak-me-xl
 ak-me-xs
+ak-min-h-0
+ak-min-h-screen
+ak-min-w-0
 ak-ms-0
 ak-ms-2xl
 ak-ms-2xs
@@ -394,3 +401,6 @@ ak-text-start
 ak-text-xl
 ak-text-xs
 ak-top-0
+ak-w-auto
+ak-w-fit
+ak-w-full

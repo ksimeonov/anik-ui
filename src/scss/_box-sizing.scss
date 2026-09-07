@@ -9,7 +9,6 @@
 // cannot drift. Declaration test (spec 11 §2) asserts every padding utility and
 // layout primitive appears here.
 
-@use 'sass:list';
 @use 'config';
 
 // Padding property tokens, mirrored in _utilities.scss.
@@ -21,6 +20,14 @@ $_selectors: '.ak-row, .ak-row > *, .ak-page, .ak-cq, .ak-flex, .ak-inline-flex'
   @each $step in config.$space-steps {
     $_selectors: '#{$_selectors}, .ak-#{$token}-#{$step}';
   }
+}
+
+// Sizing utilities need border-box for the same reason padding utilities do:
+// `inline-size: 100%` plus consumer padding overflows its parent under
+// content-box. Generated from the whole family rather than hand-picking the
+// definite-size members, so it stays mechanical and cannot drift (D-025).
+@each $name, $spec in config.$sizing {
+  $_selectors: '#{$_selectors}, .ak-#{$name}';
 }
 
 #{$_selectors} {

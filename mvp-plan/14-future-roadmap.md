@@ -54,7 +54,9 @@ decision:
 
 | Item | Why deferred |
 |---|---|
-| `ak-truncate`, overflow utilities | Not needed to lay out a page |
+| `ak-truncate`, overflow utilities | Not needed to lay out a page. Reconsidered when sizing shipped (D-039) and deliberately left deferred |
+| `ak-w-screen` | `100vw` / `100dvi` includes the scrollbar and causes horizontal overflow; shipping it would be shipping a known bug (D-039) |
+| Breakpoint variants on sizing | Would add ~90 classes; the `--ak-viewport-block` and `--ak-row-gap` token pattern covers the real cases (D-024, D-040) |
 | z-index scale | Stacking is application policy; a shared scale that mismatches the host app is worse than none |
 | aspect-ratio | No recurring need demonstrated yet |
 | Responsive spacing utilities | ~1,800 classes; the `--ak-row-gap` token pattern covers it (see `03-spacing-and-tokens.md`) |

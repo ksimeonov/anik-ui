@@ -84,8 +84,28 @@ test('every padding utility and layout primitive is in the box-sizing selector l
       );
     }
   }
-  // 6 primitives + 63 padding utilities, and nothing else.
-  assert.equal(selectors.size, 69);
+  // Sizing utilities need border-box for the same reason padding does:
+  // inline-size: 100% + consumer padding overflows under content-box (D-039).
+  for (const name of [
+    'w-full',
+    'w-auto',
+    'w-fit',
+    'max-w-full',
+    'min-w-0',
+    'h-full',
+    'h-auto',
+    'h-screen',
+    'min-h-screen',
+    'min-h-0'
+  ]) {
+    assert.ok(
+      selectors.has(`.ak-${name}`),
+      `box-sizing list missing .ak-${name}`
+    );
+  }
+
+  // 6 primitives + 63 padding utilities + 10 sizing utilities, and nothing else.
+  assert.equal(selectors.size, 79);
 });
 
 test('no !important anywhere in the utilities stylesheet', () => {
@@ -120,4 +140,45 @@ test('typography sizes ship a paired line-height', () => {
     assert.match(body, /font-size:\s*var\(--ak-font-size-/);
     assert.match(body, /line-height:\s*var\(--ak-line-height-/);
   }
+});
+
+// --- Sizing (D-039 / D-040) -------------------------------------------------
+
+test('sizing utilities use logical properties, never width/height', () => {
+  const expected = {
+    'w-full': /^inline-size:\s*100%;?$/,
+    'w-auto': /^inline-size:\s*auto;?$/,
+    'w-fit': /^inline-size:\s*fit-content;?$/,
+    'max-w-full': /^max-inline-size:\s*100%;?$/,
+    'min-w-0': /^min-inline-size:\s*0;?$/,
+    'h-full': /^block-size:\s*100%;?$/,
+    'h-auto': /^block-size:\s*auto;?$/,
+    'h-screen': /^block-size:\s*var\(--ak-viewport-block\);?$/,
+    'min-h-screen': /^min-block-size:\s*var\(--ak-viewport-block\);?$/,
+    'min-h-0': /^min-block-size:\s*0;?$/
+  };
+
+  for (const [name, re] of Object.entries(expected)) {
+    const body = ruleBody(`.ak-${name}`)
+      .replace(/box-sizing:\s*border-box;?/, '') // also in the box-sizing list
+      .replace(/^\s*;\s*/, '')
+      .trim();
+    assert.match(body, re, `.ak-${name} declaration`);
+  }
+});
+
+test('full-viewport sizing goes through the token, not a hard-coded unit', () => {
+  for (const name of ['h-screen', 'min-h-screen']) {
+    const body = ruleBody(`.ak-${name}`);
+    assert.match(body, /var\(--ak-viewport-block\)/);
+    assert.doesNotMatch(body, /\d+(dvb|svb|lvb|vh|dvh|svh|lvh)/);
+  }
+});
+
+test('--ak-viewport-block defaults to the dynamic viewport block size', () => {
+  assert.match(css, /--ak-viewport-block:\s*100dvb/);
+});
+
+test('ak-w-screen is not generated (100dvi includes the scrollbar)', () => {
+  assert.doesNotMatch(css, /\.ak-w-screen\b/);
 });

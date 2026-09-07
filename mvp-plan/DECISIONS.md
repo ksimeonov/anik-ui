@@ -144,8 +144,8 @@ Viewport and container variants are generated **only** for columns, flex directi
 display/visibility. Everything else — spacing, alignment, typography, position — has no
 variants. Responsive spacing is served by the `--ak-row-gap` token pattern.
 
-Total generated classes: **396**, enumerated in `15-class-api-matrix.md` and asserted
-in CI.
+Total generated classes: **406** (396 at MVP definition, plus the ten sizing utilities
+added by D-039), enumerated in `15-class-api-matrix.md` and asserted in CI.
 
 ### D-025 — `box-sizing` ships in the core stylesheet
 Emitted as one generated selector list covering every padding utility and layout
@@ -237,6 +237,70 @@ form per the written spec. Not yet decided, and **blocking Phase 4**:
   host-independent and unaffected.
 
 Does not block Phases 1–3. Must be resolved before the release workflow is configured.
+
+### D-039 — Sizing utilities added to MVP
+Ten new classes, no breakpoint variants. Total API 396 → **406**.
+
+```text
+ak-w-full  ak-w-auto  ak-w-fit  ak-max-w-full  ak-min-w-0
+ak-h-full  ak-h-auto  ak-h-screen  ak-min-h-screen  ak-min-h-0
+```
+
+Reason for inclusion: the library shipped **no** width or height utilities at all, so
+"make this full-width" and "make this hero fill the viewport" were inexpressible and
+every consumer wrote custom CSS on day one — the same failure mode D-029 cites for flex
+sizing. Sizing was never in the `14-future-roadmap.md` deferred table, so this adds a
+capability rather than reversing a decision.
+
+Two members earn their place by closing specific traps:
+
+- **`ak-min-h-screen`.** `block-size: 100dvb` *clips* a hero taller than the viewport.
+  A minimum is what is almost always wanted, so both ship and the README points at the
+  min variant first.
+- **`ak-min-w-0`.** `.ak-row > *` gets `min-width: 0` automatically (spec 04), but
+  `ak-flex` children deliberately do not — long unbroken content still blows out a flex
+  row and there was no class-level fix. Making it opt-in rather than applying
+  `.ak-flex > *` avoids silently changing flex behaviour for every consumer.
+
+**Naming: `ak-w-*` / `ak-h-*`, emitting `inline-size` / `block-size`.** Familiar
+spelling, logical property underneath — exactly the `ak-pt-md` → `padding-block-start`
+precedent, and D-020's reasoning for keeping the `t`/`b` spelling applies verbatim. A
+logical class spelling is in any case unavailable: `ak-inline`, `ak-inline-block` and
+`ak-inline-flex` are display classes *with breakpoint variants*, so any `ak-inline-*`
+sizing token would collide.
+
+**No breakpoint variants**, consistent with D-024. Responsive sizing uses the token
+layer, like responsive spacing.
+
+**Included in the generated `box-sizing` list** (69 → 79 selectors). `inline-size: 100%`
+plus consumer padding overflows its parent under `content-box`, so the D-025
+self-sufficiency argument applies unchanged. Generated from the whole family rather than
+hand-picking the definite-size members, so it stays mechanical and cannot drift.
+
+**Rejected: `ak-w-screen`.** `100vw` / `100dvi` includes the scrollbar and causes
+horizontal overflow — the classic full-bleed footgun. Recorded in
+`14-future-roadmap.md` so it is not re-litigated as a gap.
+
+### D-040 — Full-viewport height is a token defaulting to `100dvb`
+```css
+:root { --ak-viewport-block: 100dvb; }
+.ak-h-screen     { block-size: var(--ak-viewport-block); }
+.ak-min-h-screen { min-block-size: var(--ak-viewport-block); }
+```
+
+**Logical unit.** `dvb` is the block-axis counterpart of `dvh`, consistent with D-020
+and with the reset, which already uses `min-block-size: 100svb`. Support is identical to
+the physical units — Chrome/Edge 108+, Firefox 101+, Safari and iOS Safari 15.4+;
+Baseline Widely Available since June 2025 — comfortably under the D-027 floor of
+Chrome 111 / Firefox 113 / Safari 16.4.
+
+**Dynamic by default.** `dvb` tracks mobile browser chrome showing and hiding, which is
+what authors mean when they write `100vh`. The trade-off is real: `dvb` can reflow
+mid-scroll on mobile, where `svb` is stable but leaves a gap once the chrome retracts.
+Routing it through a token makes that a one-line consumer override
+(`--ak-viewport-block: 100svb`) instead of a library-imposed choice, matching the
+`--ak-row-gap` / `--ak-page-max` pattern (D-010) rather than shipping two class
+variants.
 
 ## Unresolved
 
