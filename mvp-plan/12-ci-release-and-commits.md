@@ -128,9 +128,13 @@ GitHub Environment with required reviewers, plus `--provenance`. Never commit a 
 
 `@semantic-release/changelog` generates `CHANGELOG.md`; `@semantic-release/git` commits
 it back to `main` along with the version bump. Branch protection on `main` must allow
-that bot commit — either by exempting the release identity or by using a
-protection-aware token. Confirm this during Phase 4 setup rather than discovering it on
-the first release.
+that bot commit — resolved by D-045: semantic-release pushes over SSH with a write
+deploy key, deploy keys are the only bypass actor on the `main` ruleset, and the key
+lives only in the `release` environment, which only `main` can deploy to.
+
+After releasing, the workflow merges `main` back into `dev` so `dev` carries the version
+and CHANGELOG commit. If that merge conflicts, the release has already shipped; merge
+`main` into `dev` by hand.
 
 ## PR checks (required)
 
