@@ -149,12 +149,15 @@ Acceptance gates, not activities. Each has a pass condition.
 
 - [x] Decide repository host (D-038) — GitHub, `ksimeonov/anik-ui`; GitLab project archived
 - [x] Add Conventional Commits guidance to CONTRIBUTING.md — "Commit convention" section
-- [ ] Configure required PR checks (lint, format, build, tests, pack, commitlint on title)
+- [x] Configure required PR checks — `.github/workflows/pr-checks.yml` (`checks`: lint,
+      format, build, tests, pack; PRs into `dev`/`main` + pushes to `dev`) and
+      `pr-title.yml` (`pr-title`: commitlint on the PR title). Node 24 LTS, actions
+      pinned by SHA. Title gate verified failing on a non-conventional title (PR #1)
 - [x] Merge methods (D-044) — squash into `dev` (title = PR title, body = commit list),
       merge commit from `dev` into `main` (title = PR title, body = PR body); rebase off
-- [~] Protect `main` — ruleset `main` (id 23765513): PR required (0 approvals),
-      merge-commit only, no force-push/deletion, no bypass actors. Still to add:
-      required status checks once the PR workflow exists
+- [x] Protect `main` — ruleset `main` (id 23765513, targets `refs/heads/main`): PR
+      required (0 approvals), merge-commit only, `checks` + `pr-title` required (GitHub
+      Actions only), no force-push/deletion, no bypass actors
 - [ ] Optional: `dev` ruleset to enforce squash-only there (would also require PRs
       into `dev`, ending direct pushes)
 - [ ] Configure main-branch release workflow (concurrency group, Node LTS, permissions)
