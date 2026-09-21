@@ -15,11 +15,11 @@
   "author": "Kristian Simeonov",
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/kristian90s/ui.git"
+    "url": "git+https://github.com/ksimeonov/ui.git"
   },
-  "homepage": "https://gitlab.com/kristian90s/ui#readme",
+  "homepage": "https://github.com/ksimeonov/ui#readme",
   "bugs": {
-    "url": "https://gitlab.com/kristian90s/ui/-/issues"
+    "url": "https://github.com/ksimeonov/ui/issues"
   },
   "type": "module",
   "sideEffects": [

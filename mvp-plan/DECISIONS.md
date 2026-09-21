@@ -218,10 +218,18 @@ Minified builds and source maps ship for both entrypoints.
 Replacement ships first, old class marked deprecated in CHANGELOG/README/source, kept
 for at least one minor, removed only in a major with a `BREAKING CHANGE:` footer.
 
-### D-038 — Repository host (OPEN)
+### D-038 — Repository host: GitHub
+
+**Decided 2026-09-21: move to GitHub** (`https://github.com/ksimeonov/ui`). The GitLab
+project is archived, not deleted. Chosen before any npm publish, so no released package
+metadata points at the old host. The specs, `.github/` templates, Actions release
+pipeline, Pages deploy and npm trusted publishing via GitHub OIDC all apply as written.
+
+The analysis at the time of the decision, kept for the record:
+
 The specs assume GitHub throughout — `.github/` templates, GitHub Actions release
 pipeline, GitHub Pages playground deploy, npm trusted publishing via GitHub OIDC
-(`id-token: write`). The actual `origin` remote is **GitLab**
+(`id-token: write`). The `origin` remote was then **GitLab**
 (`https://gitlab.com/kristian90s/ui.git`).
 
 Phase 1 landed the host-neutral work and wrote the issue/PR templates in `.github/`
@@ -366,8 +374,6 @@ into it.
       is free). Placeholder staged at `reserve/`; needs an authenticated `npm publish`
       by the maintainer. No longer blocks Phase 1; must be done before the Phase 4
       first release.
-- [ ] **Repository host** (D-038) — GitHub vs GitLab. Blocks Phase 4 release
-      automation only; Phases 1–3 proceed regardless.
 - [ ] **"AniK" trademark sanity check + similar-package scan** — D-018 rule step 4,
       still outstanding.
 
@@ -378,4 +384,5 @@ All other previously-unresolved items are now decided:
 `~~exact Flex class matrix~~` (D-021, D-029, `15-class-api-matrix.md`),
 `~~exact reset rules~~` (D-025, D-026, `07-reset-and-global-css.md`),
 `~~exact package exports~~` (D-036, `08-build-and-package.md`),
-`~~exact release tool/configuration~~` (D-032, D-033, `12-ci-release-and-commits.md`).
+`~~exact release tool/configuration~~` (D-032, D-033, `12-ci-release-and-commits.md`),
+`~~repository host~~` (D-038 — GitHub).

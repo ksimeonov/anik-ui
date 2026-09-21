@@ -56,10 +56,9 @@ an individual is officially representing the community in public spaces.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the community leaders responsible for enforcement via a confidential
-issue or direct message to the project maintainer through
-<https://gitlab.com/kristian90s>. All complaints will be reviewed and
-investigated promptly and fairly.
+reported to the community leaders responsible for enforcement by contacting the
+project maintainer privately through <https://github.com/ksimeonov>. All
+complaints will be reviewed and investigated promptly and fairly.
 
 All community leaders are obligated to respect the privacy and security of the
 reporter of any incident.
