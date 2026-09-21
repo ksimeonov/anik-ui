@@ -394,6 +394,27 @@ Consequences:
 - GitHub enforces `merge` only on `main` (ruleset). Squash-only on `dev` is convention
   until `dev` gets its own ruleset — the repo allows both methods.
 
+### D-045 — The release bot pushes to `main` with an environment-scoped deploy key
+`@semantic-release/git` commits the version bump and `CHANGELOG.md` straight to `main`,
+which the `main` ruleset otherwise rejects (PR required, checks required).
+
+The bot pushes over SSH with a **write deploy key**, and `DeployKey` is the ruleset's only
+bypass actor. The private key is the `RELEASE_DEPLOY_KEY` secret of the **`release`
+environment**, whose deployments are limited to `main`, so only a workflow already
+running on `main` — which got there through a checked PR — can read it. semantic-release
+tries the configured `repositoryUrl` (SSH) before any token URL, so the key is what it
+pushes with.
+
+Rejected: bypassing for the GitHub Actions app, because every workflow's `GITHUB_TOKEN`
+would then be able to push to `main`; a personal access token, because it acts as the
+maintainer across every repository and expires; dropping `@semantic-release/git`,
+because spec 12 keeps `CHANGELOG.md` in the repository and in the tarball.
+
+The release commit carries `[skip ci]`, so it does not trigger another release run.
+After releasing, the same job merges `main` back into `dev`, keeping D-044's "dev is a
+descendant of main" true. `HUSKY=0` in the job keeps the local hooks from running on the
+bot's commits.
+
 ## Unresolved
 
 - [ ] **Reserve the npm name** — availability confirmed (D-018, 2026-09-07: `anik-ui`

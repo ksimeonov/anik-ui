@@ -157,16 +157,25 @@ Acceptance gates, not activities. Each has a pass condition.
       merge commit from `dev` into `main` (title = PR title, body = PR body); rebase off
 - [x] Protect `main` — ruleset `main` (id 23765513, targets `refs/heads/main`): PR
       required (0 approvals), merge-commit only, `checks` + `pr-title` required (GitHub
-      Actions only), no force-push/deletion, no bypass actors
+      Actions only), no force-push/deletion
 - [ ] Optional: `dev` ruleset to enforce squash-only there (would also require PRs
       into `dev`, ending direct pushes)
-- [ ] Configure main-branch release workflow (concurrency group, Node LTS, permissions)
-- [ ] Seed annotated `v0.0.0` tag on `main` before the first release run
-- [ ] Configure semantic-release + changelog + git plugins
-- [ ] Confirm branch protection allows the release bot's version/CHANGELOG commit
-- [ ] Configure npm trusted publishing (OIDC) — **verify the exchange actually works**;
-      fall back to a granular token in a reviewed GitHub Environment
-- [ ] Enable provenance
+- [x] Configure main-branch release workflow — `.github/workflows/release.yml`: push to
+      `main`, `release-main` concurrency group (no cancel), Node 24, `release`
+      environment, full check suite before releasing, back-merge `main` → `dev` after
+- [x] Seed annotated `v0.0.0` tag on `main` — on `7829609`, pushed 2026-09-21
+- [x] Configure semantic-release + changelog + git plugins — `.releaserc.json`,
+      `conventionalcommits` preset. Dry run on the branch computed **0.1.0** from 4 `feat`
+- [~] Let the release bot's version/CHANGELOG commit through the `main` ruleset (D-045)
+      — deploy key 163964288 (write) created, private half is `RELEASE_DEPLOY_KEY` in
+      the `release` environment (deployments limited to `main`). **Maintainer:** add
+      `DeployKey` as a bypass actor on ruleset 23765513 (blocked for the agent)
+- [ ] Configure npm trusted publishing (OIDC) — needs the package to exist on npm first
+      (reserve step). **Maintainer:** npmjs.com → `anik-ui` → Settings → Trusted
+      publisher → GitHub Actions: `ksimeonov` / `anik-ui` / `release.yml` / environment
+      `release`. **Verify the exchange on the first release**; fallback is a granular
+      `NPM_TOKEN` secret in the `release` environment
+- [x] Enable provenance — automatic with trusted publishing (`id-token: write`)
 - [ ] Deploy playground to GitHub Pages from CI
 - [ ] Switch the GitHub default branch back to `main` — set to `dev` until the first
       release, because `main` still holds only GitLab's template README. The `main`
