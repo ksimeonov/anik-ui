@@ -14,9 +14,9 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ksimeonov/ui.git"
+    "url": "git+https://github.com/ksimeonov/anik-ui.git"
   },
-  "homepage": "https://github.com/ksimeonov/ui",
+  "homepage": "https://github.com/ksimeonov/anik-ui",
   "files": [
     "README.md"
   ],

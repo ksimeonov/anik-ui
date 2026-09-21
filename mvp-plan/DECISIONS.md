@@ -223,7 +223,7 @@ for at least one minor, removed only in a major with a `BREAKING CHANGE:` footer
 
 ### D-038 — Repository host: GitHub
 
-**Decided 2026-09-21: move to GitHub** (`https://github.com/ksimeonov/ui`). The GitLab
+**Decided 2026-09-21: move to GitHub** (`https://github.com/ksimeonov/anik-ui`). The GitLab
 project is archived, not deleted. Chosen before any npm publish, so no released package
 metadata points at the old host. The specs, `.github/` templates, Actions release
 pipeline, Pages deploy and npm trusted publishing via GitHub OIDC all apply as written.

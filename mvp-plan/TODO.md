@@ -147,7 +147,7 @@ Acceptance gates, not activities. Each has a pass condition.
 
 ## Phase 4 — Release automation
 
-- [x] Decide repository host (D-038) — GitHub, `ksimeonov/ui`; GitLab project archived
+- [x] Decide repository host (D-038) — GitHub, `ksimeonov/anik-ui`; GitLab project archived
 - [x] Add Conventional Commits guidance to CONTRIBUTING.md — "Commit convention" section
 - [ ] Configure required PR checks (lint, format, build, tests, pack, commitlint on title)
 - [x] Merge methods (D-044) — squash into `dev` (title = PR title, body = commit list),
@@ -182,7 +182,7 @@ Post-MVP additions landed since Phase 2: sizing family (D-039), `--ak-viewport-b
 lightningcss minification, and fluid display type / tracking / prose primitives
 (D-043). API is **416** classes. Overflow utilities remain deliberately deferred.
 
-Repository moved to GitHub (`ksimeonov/ui`, D-038); the GitLab project is archived.
+Repository moved to GitHub (`ksimeonov/anik-ui`, D-038); the GitLab project is archived.
 
 Outstanding, in order:
 1. Maintainer: `cd reserve && npm login && npm publish` to reserve `anik-ui@0.0.1`;

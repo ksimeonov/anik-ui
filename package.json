@@ -15,11 +15,11 @@
   "author": "Kristian Simeonov",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ksimeonov/ui.git"
+    "url": "git+https://github.com/ksimeonov/anik-ui.git"
   },
-  "homepage": "https://github.com/ksimeonov/ui#readme",
+  "homepage": "https://github.com/ksimeonov/anik-ui#readme",
   "bugs": {
-    "url": "https://github.com/ksimeonov/ui/issues"
+    "url": "https://github.com/ksimeonov/anik-ui/issues"
   },
   "type": "module",
   "sideEffects": [
