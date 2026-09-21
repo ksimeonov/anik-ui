@@ -59,11 +59,14 @@ npm ci
 npm run build         # sass -> dist/
 npm run lint          # stylelint
 npm run format:check  # prettier
-npm test              # node --test
+npm test              # build + API snapshot check + node --test
 ```
 
-`npm run api:update` regenerates `api/classes.txt` after an intentional API
-change. CI fails on any undocumented drift.
+`npm test` rebuilds `dist/`, verifies the class list against
+`api/classes.txt`, and then runs the assertions — so class-API drift fails the
+suite. After an _intentional_ API change, regenerate the snapshot with
+`npm run api:update` and update `EXPECTED_COUNT` in `scripts/extract-api.mjs`
+plus the totals in `mvp-plan/15-class-api-matrix.md`.
 
 ## Deprecation policy
 

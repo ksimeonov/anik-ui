@@ -22,6 +22,13 @@
     line-height: 1.5;
   }
 
+  // Block-START margin only (D-042). Zeroing the bottom margin too left every
+  // consumer re-adding vertical rhythm by hand on day one. Killing the top
+  // margin is what actually earns its place here: it stops the first child of a
+  // box collapsing its margin out through the parent. The block-end margin is
+  // the UA's and is left alone, so headings and paragraphs still space
+  // themselves. `margin-inline: 0` removes the UA's odd 40px indents on
+  // `figure` and `dd`, which are not rhythm and are almost never wanted.
   h1,
   h2,
   h3,
@@ -33,7 +40,8 @@
   blockquote,
   dl,
   dd {
-    margin: 0;
+    margin-block-start: 0;
+    margin-inline: 0;
   }
 
   h1,

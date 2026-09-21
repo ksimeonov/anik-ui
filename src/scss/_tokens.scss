@@ -34,4 +34,17 @@
   // is what "100vh" is usually meant to do. Override with 100svb for stable
   // sizing that never reflows mid-scroll.
   --ak-viewport-block: 100dvb;
+
+  // Layout knobs (D-041). These were previously fallback-only values buried in
+  // _base.scss, which made them invisible in devtools and undiscoverable
+  // without reading the source. Declaring them here is what makes them API.
+
+  // Default gutter between ak-row columns. Non-zero so a row looks like a
+  // layout out of the box; set to 0 (or use ak-gap-0) for a flush grid.
+  --ak-row-gap: var(--ak-space-md);
+
+  // ak-page wrapper. Set --ak-page-max to `none` for a full-width page that
+  // keeps its gutters — the fluid case, without a second class (D-040).
+  --ak-page-max: 75rem;
+  --ak-page-gutter: var(--ak-space-md);
 }

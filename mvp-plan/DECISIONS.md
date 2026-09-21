@@ -302,6 +302,35 @@ Routing it through a token makes that a one-line consumer override
 `--ak-row-gap` / `--ak-page-max` pattern (D-010) rather than shipping two class
 variants.
 
+### D-041 — Layout knobs are declared tokens; no `ak-page-fluid`
+`--ak-row-gap`, `--ak-page-max` and `--ak-page-gutter` were fallback-only values living
+inside `var()` calls in `_base.scss`. They are now declared in `:root` alongside the
+rest of the token layer, and `--ak-row-gap` defaults to `--ak-space-md` rather than `0`.
+
+Two reasons. **Discoverability:** an undeclared custom property does not appear in
+devtools' computed panel and cannot be found by anyone who has not read the Sass, so it
+was documented API in name only. **A bare `ak-row` looked broken:** a zero default meant
+the 12-column grid shipped flush, and the first thing every consumer did was add a gap.
+
+A full-width `ak-page-fluid` twin class was considered and rejected. `--ak-page-max: none`
+already expresses it, and D-040 settled this exact shape — a token override rather than
+two class variants. The API stays at **406** classes.
+
+### D-042 — The reset zeroes block-start margins only
+`h1`–`h6`, `p`, `figure`, `blockquote`, `dl`, `dd` get `margin-block-start: 0` and
+`margin-inline: 0`, not `margin: 0`.
+
+Removing the block-end margin too is a net-negative trade: it deletes the UA's vertical
+rhythm and hands the work back to the consumer, which is the opposite of what a reset is
+for. The block-start margin is the one worth removing — it collapses out through a
+parent when the element is a first child, which is a real and surprising bug.
+`margin-inline: 0` is kept because the UA's 40px indents on `figure` and `dd` are not
+rhythm.
+
+Consequence: the reset is no longer fully "flattening". Consumers who want the old
+behaviour write `:where(h1,h2,h3,h4,h5,h6,p) { margin-block-end: 0 }` in their own CSS,
+which wins over `@layer ak.reset` without a specificity fight (D-026).
+
 ## Unresolved
 
 - [ ] **Reserve the npm name** — availability confirmed (D-018, 2026-09-07: `anik-ui`

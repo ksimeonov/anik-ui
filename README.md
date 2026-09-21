@@ -6,7 +6,8 @@ alignment, typography, sizing and positioning utilities.
 
 - **CSS-first.** No JavaScript runtime in the package.
 - **Framework agnostic.** Angular, React, Vue, Svelte, plain HTML.
-- **Bounded API.** Exactly 406 generated classes, enumerated and enforced in CI.
+- **Bounded API.** Exactly 406 generated classes, enumerated and asserted by
+  the test suite (`npm test`).
 - **No unexpected global styles.** The reset is opt-in and never auto-enabled.
 
 > **Status: pre-release.** The class API is being implemented against
@@ -79,6 +80,63 @@ Below the floor, `@container` blocks are ignored by the parser. Because the
 system is mobile-first, an unsupported browser keeps the **default (smallest)
 layout** rather than breaking; viewport `@media` variants still apply. This is
 intended behaviour — there is no JavaScript polyfill.
+
+## Layout
+
+Three structural classes. Everything else in the library is a utility.
+
+| Class     | What it does                                                   |
+| --------- | -------------------------------------------------------------- |
+| `ak-page` | Centred page wrapper: capped width, auto margins, side gutters |
+| `ak-row`  | The 12-column grid. Children are placed with `ak-col-*`        |
+| `ak-cq`   | Establishes a query container, enabling the `-c-*` variants    |
+
+```html
+<div class="ak-page">
+  <div class="ak-row">
+    <main class="ak-col-12 ak-col-md-8">…</main>
+    <aside class="ak-col-12 ak-col-md-4">…</aside>
+  </div>
+</div>
+```
+
+The wrapper is called `ak-page`, **not** `ak-container` — in this library
+"container" always means a _query_ container (`ak-cq`), and overlapping the two
+meanings would be a lasting source of confusion.
+
+### Layout tokens
+
+These three custom properties are the layout API. Override them anywhere — on
+`:root`, on a section, or on a single element.
+
+| Token              | Default              | Controls                        |
+| ------------------ | -------------------- | ------------------------------- |
+| `--ak-row-gap`     | `var(--ak-space-md)` | gutter between `ak-row` columns |
+| `--ak-page-max`    | `75rem`              | `ak-page` maximum width         |
+| `--ak-page-gutter` | `var(--ak-space-md)` | `ak-page` inline padding        |
+
+**Full-width ("fluid") page.** There is no `ak-page-fluid` class; unset the cap:
+
+```css
+.hero {
+  --ak-page-max: none; /* full width, gutters kept */
+}
+```
+
+```html
+<div class="ak-page hero">…</div>
+```
+
+**Wider or narrower pages.** Same mechanism:
+
+```css
+.marketing {
+  --ak-page-max: 90rem;
+}
+```
+
+**Flush grid.** `ak-row` is spaced by default. For an edge-to-edge grid use
+`ak-gap-0`, or set `--ak-row-gap: 0`.
 
 ## Responsive spacing escape hatch
 
@@ -171,7 +229,7 @@ any `ak-cq` ancestor.
 
 The full generated class list lives in
 [`api/classes.txt`](api/classes.txt), regenerated from the built CSS and
-asserted in CI. The authoritative contract for what is generated is
+asserted by `npm test`. The authoritative contract for what is generated is
 [`mvp-plan/15-class-api-matrix.md`](mvp-plan/15-class-api-matrix.md).
 
 ## Contributing

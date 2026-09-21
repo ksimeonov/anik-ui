@@ -42,9 +42,12 @@ Three details here are load-bearing and must not be "simplified" away:
 2. **`min-width: 0` on the children.** Fixing the *track* is not enough: a grid item
    also has an automatic minimum size of min-content in the inline axis and will
    overflow its own grid area without this. Both rules are required.
-3. **`gap: var(--ak-row-gap, 0)`.** The default gap is zero — never a surprise value.
-   Routing it through a custom property is what makes responsive gap possible for
-   consumers without shipping responsive gap utilities (see
+3. **`gap: var(--ak-row-gap, 0)`.** `--ak-row-gap` is declared in the token layer and
+   defaults to `--ak-space-md`, so a row is spaced out of the box (D-041). The literal
+   `0` in the `var()` is only a safety net for a consumer who unsets the token; use
+   `ak-gap-0`, or `--ak-row-gap: 0`, for a deliberately flush grid. Routing gap through
+   a custom property is what makes responsive gap possible for consumers without
+   shipping responsive gap utilities (see
    [`15-class-api-matrix.md`](15-class-api-matrix.md)).
 
 ## Page wrapper

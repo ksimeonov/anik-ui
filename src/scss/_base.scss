@@ -9,8 +9,10 @@
   // <pre>/<table>/long string would blow out the track.
   grid-template-columns: repeat(12, minmax(0, 1fr));
 
-  // Default gap is 0. Routing it through a custom property is what makes
-  // responsive gap possible without shipping responsive gap utilities.
+  // --ak-row-gap is declared in _tokens.scss and defaults to --ak-space-md
+  // (D-041). The literal 0 here is only a safety net for a consumer who unsets
+  // the token. Routing gap through a custom property is what makes responsive
+  // gap possible without shipping responsive gap utilities.
   gap: var(--ak-row-gap, 0);
 }
 
@@ -22,6 +24,8 @@
 
 // Centred, token-driven page-width wrapper (D-022). Named `ak-page`, never
 // `ak-container`: "container" means a query container in this system.
+// Both tokens are declared in _tokens.scss (D-041); the fallbacks here are a
+// safety net. `--ak-page-max: none` gives the full-width ("fluid") page.
 .ak-page {
   width: 100%;
   max-width: var(--ak-page-max, 75rem);

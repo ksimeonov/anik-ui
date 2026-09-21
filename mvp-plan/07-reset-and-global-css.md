@@ -51,7 +51,10 @@ simply guarantees the utilities are self-sufficient without it.
 
   body { margin: 0; min-block-size: 100svb; line-height: 1.5; }
 
-  h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd { margin: 0; }
+  h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd {
+    margin-block-start: 0;
+    margin-inline: 0;
+  }
 
   h1, h2, h3, h4, h5, h6, p { overflow-wrap: break-word; }
 
@@ -78,7 +81,14 @@ simply guarantees the utilities are self-sufficient without it.
 }
 ```
 
-Two details worth stating explicitly:
+Three details worth stating explicitly:
+
+- **Block-start margin only, not `margin: 0` (D-042).** Zeroing the block-end margin as
+  well leaves every consumer re-adding vertical rhythm by hand on day one, which is
+  work the reset created rather than removed. The top margin is the one that earns
+  removal — it is what collapses out through a parent when the element is a first
+  child. `margin-inline: 0` stays because the UA's 40px indents on `figure` and `dd`
+  are not rhythm and are almost never wanted.
 
 - **The reset is wrapped in `@layer ak.reset`.** Unlayered styles beat layered ones, so
   any consumer rule wins over the reset without a specificity fight. This is exactly
