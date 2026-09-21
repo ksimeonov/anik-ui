@@ -201,6 +201,9 @@ moment the class API is declared stable.
 Because a squash merge turns the PR title into the commit message, the PR title is what
 the release tooling reads. Local `husky` hooks are a convenience, not the gate.
 
+_Amended by D-044: squash-only now applies to PRs into `dev`; `dev` → `main` release
+PRs use a merge commit._
+
 ### D-034 — API snapshot test is the contract
 `api/classes.txt` is generated from built CSS and committed. CI fails on any drift.
 
@@ -367,6 +370,29 @@ reset now keeps (D-042) do not stack on top of the flow space.
 **Box-sizing:** `ak-section` pads, so it joins the D-025 list (79 → 80). `ak-measure`
 does not: a measure is a character count, and padding should add to it rather than eat
 into it.
+
+### D-044 — `dev` → `main` release PRs use a merge commit
+Amends D-033. Work still lands on `dev` as one conventional commit per change (squash
+merge for PRs into `dev`). The release PR from `dev` into `main` is a **merge commit**,
+and `main` accepts nothing else.
+
+Squashing the release PR collapsed every change since the last release into one commit,
+so `semantic-release` read a single title: one changelog entry per release, and that one
+title alone chose the bump. It also left `main` with a commit `dev` never had, so `dev`
+diverged after every release. A merge commit keeps each conventional commit from `dev`
+reachable from `main`, which is what the commit analyzer and changelog need, and `dev`
+stays an ancestor of `main`.
+
+Consequences:
+- `main` history is no longer linear; the `required_linear_history` rule is dropped.
+- The merge commit's title is the PR title (repo setting), so the release PR still needs
+  a conventional title; use a no-release type such as `chore(release): …` so the merge
+  commit itself does not add a changelog entry.
+- The gate that matters for versioning moves to the commits on `dev`: PR titles for
+  squash-merged PRs into `dev`, and the local `husky` + `commitlint` hook for direct
+  commits to `dev`.
+- GitHub enforces `merge` only on `main` (ruleset). Squash-only on `dev` is convention
+  until `dev` gets its own ruleset — the repo allows both methods.
 
 ## Unresolved
 

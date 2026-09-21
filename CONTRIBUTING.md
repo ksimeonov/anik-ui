@@ -46,8 +46,9 @@ Release semantics:
 
 ### Why the PR title matters
 
-Merges are **squash-only**, so the PR title becomes the commit message on the
-target branch and is what the release tooling reads. `commitlint` runs on the PR
+PRs into `dev` are **squash-merged**, so the PR title becomes the commit message
+on `dev` and is what the release tooling reads. (Maintainers merge `dev` into
+`main` with a merge commit at release time, which keeps those commits intact.) `commitlint` runs on the PR
 title as a **required check** — this is the authoritative gate. The local
 `husky` + `commitlint` hook on your own commits is a convenience so you catch
 mistakes early; it is not authoritative.

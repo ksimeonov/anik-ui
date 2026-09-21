@@ -11,12 +11,19 @@ Normal work goes to `dev`. Changes reach `main` through a PR.
 
 ## Merge policy
 
-**Squash merge only, into both `dev` and `main`.** Linear history, and each release
-commit maps to exactly one PR.
+**Squash merge into `dev`; merge commit from `dev` into `main`** (D-044).
 
-The consequence matters: with squash merges, the **PR title becomes the commit
-message**, so the PR title is what the release tooling reads. Enforcement therefore
-targets the PR title, not local commits.
+- PRs into `dev` are squash-merged, so each change lands as one commit whose message is
+  the **PR title**.
+- The release PR from `dev` into `main` is a merge commit — the only method the `main`
+  ruleset allows. Every conventional commit on `dev` stays reachable from `main`, so
+  `semantic-release` sees each one individually, and `dev` never diverges from `main`.
+- Give the release PR a no-release title (`chore(release): …`); the merge commit takes
+  it as its title.
+
+The consequence matters: the commits on `dev` are what the release tooling reads, and
+for squash-merged PRs those are the PR titles. Enforcement therefore targets the PR
+title, backed by the local hook for direct commits to `dev`.
 
 ## Conventional Commits
 
@@ -44,7 +51,7 @@ Guidance alone is not enough — automated versioning is only as reliable as the
 it reads.
 
 - **`commitlint` on the PR title**, as a required PR check. This is the authoritative
-  gate, because the title is what survives a squash merge.
+  gate, because the title is what survives a squash merge into `dev`.
 - **`husky` + `commitlint` on local commits**, as a convenience so contributors catch
   mistakes early. Not authoritative.
 - A `commit-convention` section in `CONTRIBUTING.md`.

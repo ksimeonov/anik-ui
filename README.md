@@ -275,9 +275,9 @@ asserted by `npm test`. The authoritative contract for what is generated is
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Commits follow
-[Conventional Commits](https://www.conventionalcommits.org/); because merges are
-squash-only, the **PR title** is the released commit message and is the enforced
-gate.
+[Conventional Commits](https://www.conventionalcommits.org/); because PRs into
+`dev` are squash-merged, the **PR title** is the released commit message and is
+the enforced gate.
 
 ## License
 

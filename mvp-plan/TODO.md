@@ -150,10 +150,13 @@ Acceptance gates, not activities. Each has a pass condition.
 - [x] Decide repository host (D-038) — GitHub, `ksimeonov/ui`; GitLab project archived
 - [x] Add Conventional Commits guidance to CONTRIBUTING.md — "Commit convention" section
 - [ ] Configure required PR checks (lint, format, build, tests, pack, commitlint on title)
-- [x] Set repository to squash-merge only — squash title = PR title, body = commit list
+- [x] Merge methods (D-044) — squash into `dev` (title = PR title, body = commit list),
+      merge commit from `dev` into `main` (title = PR title, body = PR body); rebase off
 - [~] Protect `main` — ruleset `main` (id 23765513): PR required (0 approvals),
-      squash only, linear history, no force-push/deletion, no bypass actors. Still to
-      add: required status checks once the PR workflow exists
+      merge-commit only, no force-push/deletion, no bypass actors. Still to add:
+      required status checks once the PR workflow exists
+- [ ] Optional: `dev` ruleset to enforce squash-only there (would also require PRs
+      into `dev`, ending direct pushes)
 - [ ] Configure main-branch release workflow (concurrency group, Node LTS, permissions)
 - [ ] Seed annotated `v0.0.0` tag on `main` before the first release run
 - [ ] Configure semantic-release + changelog + git plugins
