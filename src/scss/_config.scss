@@ -1,5 +1,5 @@
 // Generation config — Sass maps only, no CSS output.
-// The public contract these feed is mvp-plan/15-class-api-matrix.md (406 classes).
+// The public contract these feed is mvp-plan/15-class-api-matrix.md (416 classes).
 
 // Viewport breakpoints (D-004). Mobile-first: variants apply at min-width.
 $breakpoints: (
@@ -25,8 +25,12 @@ $space-steps: '0' '2xs' 'xs' 'sm' 'md' 'lg' 'xl' '2xl' '3xl';
 // Grid is always 12 columns (D-003). Only span-based columns exist in MVP.
 $columns: 12;
 
-// Typography sizes with paired line-heights (D-031).
-$text-sizes: 'xs' 'sm' 'md' 'lg' 'xl' '2xl';
+// Typography sizes with paired line-heights (D-031). 3xl–6xl are the fluid
+// display steps (D-043); their clamp() values live in _tokens.scss.
+$text-sizes: 'xs' 'sm' 'md' 'lg' 'xl' '2xl' '3xl' '4xl' '5xl' '6xl';
+
+// Letter-spacing steps (D-043). Values live in _tokens.scss.
+$tracking-steps: 'tight' 'normal' 'wide';
 
 // Sizing utilities (D-039), as class-name -> `property value` (a two-item
 // space-separated list, read with list.nth).

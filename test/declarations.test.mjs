@@ -68,6 +68,7 @@ test('every padding utility and layout primitive is in the box-sizing selector l
     '.ak-row',
     '.ak-row > *',
     '.ak-page',
+    '.ak-section',
     '.ak-cq',
     '.ak-flex',
     '.ak-inline-flex'
@@ -104,8 +105,11 @@ test('every padding utility and layout primitive is in the box-sizing selector l
     );
   }
 
-  // 6 primitives + 63 padding utilities + 10 sizing utilities, and nothing else.
-  assert.equal(selectors.size, 79);
+  // ak-measure is deliberately excluded: padding adds to a text measure (D-043).
+  assert.ok(!selectors.has('.ak-measure'), 'ak-measure must stay content-box');
+
+  // 7 primitives + 63 padding utilities + 10 sizing utilities, and nothing else.
+  assert.equal(selectors.size, 80);
 });
 
 test('no !important anywhere in the utilities stylesheet', () => {
@@ -135,7 +139,18 @@ test('spacing utilities reference tokens; only margin `auto` is a literal', () =
 });
 
 test('typography sizes ship a paired line-height', () => {
-  for (const size of ['xs', 'sm', 'md', 'lg', 'xl', '2xl']) {
+  for (const size of [
+    'xs',
+    'sm',
+    'md',
+    'lg',
+    'xl',
+    '2xl',
+    '3xl',
+    '4xl',
+    '5xl',
+    '6xl'
+  ]) {
     const body = ruleBody(`.ak-text-${size}`);
     assert.match(body, /font-size:\s*var\(--ak-font-size-/);
     assert.match(body, /line-height:\s*var\(--ak-line-height-/);
@@ -181,4 +196,78 @@ test('--ak-viewport-block defaults to the dynamic viewport block size', () => {
 
 test('ak-w-screen is not generated (100dvi includes the scrollbar)', () => {
   assert.doesNotMatch(css, /\.ak-w-screen\b/);
+});
+
+// --- Display type, prose and rhythm (D-043) ---------------------------------
+
+/** Px value of a `clamp(<rem>, <rem> + <vw>, <rem>)` or plain rem token. */
+function tokenPx(name, viewport) {
+  const m = css.match(new RegExp(`--ak-font-size-${name}:\\s*([^;]+);`));
+  assert.ok(m, `--ak-font-size-${name} not declared`);
+  const v = m[1].trim();
+  const c = v.match(
+    /^clamp\(([\d.]+)rem,\s*([\d.]+)rem\s*\+\s*([\d.]+)vw,\s*([\d.]+)rem\)$/
+  );
+  if (!c) return parseFloat(v) * 16;
+  const [min, base, slope, max] = c.slice(1).map(Number);
+  return Math.min(
+    Math.max(min * 16, base * 16 + (slope * viewport) / 100),
+    max * 16
+  );
+}
+
+test('the type scale never inverts at any viewport width', () => {
+  const sizes = [
+    'xs',
+    'sm',
+    'md',
+    'lg',
+    'xl',
+    '2xl',
+    '3xl',
+    '4xl',
+    '5xl',
+    '6xl'
+  ];
+  for (let vw = 280; vw <= 2560; vw += 8) {
+    for (let i = 1; i < sizes.length; i++) {
+      const lo = tokenPx(sizes[i - 1], vw);
+      const hi = tokenPx(sizes[i], vw);
+      assert.ok(
+        hi > lo,
+        `ak-text-${sizes[i]} (${hi}px) <= ak-text-${sizes[i - 1]} (${lo}px) at ${vw}px`
+      );
+    }
+  }
+});
+
+test('tracking utilities reference tokens', () => {
+  for (const step of ['tight', 'normal', 'wide']) {
+    assert.match(
+      ruleBody(`.ak-tracking-${step}`),
+      new RegExp(`^letter-spacing:\\s*var\\(--ak-tracking-${step}\\);?$`)
+    );
+  }
+});
+
+test('.ak-measure caps the inline size through the token', () => {
+  assert.match(
+    ruleBody('.ak-measure'),
+    /^max-inline-size:\s*var\(--ak-measure\);?$/
+  );
+});
+
+test('.ak-section pads the block axis through the token', () => {
+  assert.match(
+    ruleBody('.ak-section'),
+    /padding-block:\s*var\(--ak-section-space\)/
+  );
+});
+
+test('.ak-flow zeroes child margins, then spaces siblings', () => {
+  assert.match(ruleBody('.ak-flow > *'), /^margin-block:\s*0;?$/);
+  assert.match(
+    ruleBody('.ak-flow > * + *'),
+    /^margin-block-start:\s*var\(--ak-flow-space\);?$/
+  );
 });

@@ -153,10 +153,12 @@ Spec: [`06-typography-position-visibility.md`](06-typography-position-visibility
 | Class | Variants | Count |
 |---|---|---|
 | `ak-text-xs` `-sm` `-md` `-lg` `-xl` `-2xl` | no | 6 |
+| `ak-text-3xl` `-4xl` `-5xl` `-6xl` (fluid, D-043) | no | 4 |
 | `ak-text-start` `-center` `-end` | no | 3 |
 | `ak-font-bold` `ak-font-normal` | no | 2 |
+| `ak-tracking-tight` `-normal` `-wide` (D-043) | no | 3 |
 
-Subtotal: **11**
+Subtotal: **18**
 
 ## 8. Position
 
@@ -198,9 +200,26 @@ consumers who prefer stable `100svb` sizing (D-040).
 causes horizontal overflow.
 
 All ten also appear in the generated `box-sizing` selector list (D-025), which is
-therefore 79 selectors: 6 layout primitives + 63 padding utilities + 10 sizing.
+therefore 79 selectors (80 after D-043 adds `ak-section`): 6 layout primitives + 63 padding utilities + 10 sizing.
 
 Subtotal: **10**
+
+## 10. Prose and rhythm
+
+Spec: D-043 in [`DECISIONS.md`](DECISIONS.md)
+
+| Class | Declaration | Variants | Count |
+|---|---|---|---|
+| `ak-measure` | `max-inline-size: var(--ak-measure)` | no | 1 |
+| `ak-flow` | `> *` zero block margins; `> * + *` `margin-block-start: var(--ak-flow-space)` | no | 1 |
+| `ak-section` | `padding-block: var(--ak-section-space)` | no | 1 |
+
+`ak-flow` and `ak-section` are emitted with the base classes, before the utilities, so
+spacing utilities on the same element (or on an `ak-flow` child) override them.
+`ak-section` joins the `box-sizing` list (80 selectors); `ak-measure` deliberately does
+not.
+
+Subtotal: **3**
 
 ## Totals
 
@@ -212,10 +231,11 @@ Subtotal: **10**
 | Flex | 27 |
 | Alignment | 14 |
 | Spacing | 160 |
-| Typography | 11 |
+| Typography | 18 |
 | Position | 9 |
 | Sizing | 10 |
-| **Total** | **406** |
+| Prose and rhythm | 3 |
+| **Total** | **416** |
 
 This number is asserted in CI (see [`11-playground-and-testing.md`](11-playground-and-testing.md)).
 A change to it is a deliberate API change, not an implementation detail.

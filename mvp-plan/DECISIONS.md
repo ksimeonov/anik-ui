@@ -331,6 +331,35 @@ Consequence: the reset is no longer fully "flattening". Consumers who want the o
 behaviour write `:where(h1,h2,h3,h4,h5,h6,p) { margin-block-end: 0 }` in their own CSS,
 which wins over `@layer ak.reset` without a specificity fight (D-026).
 
+### D-043 — Fluid display type, tracking, and prose/rhythm primitives
+Ten new classes, no breakpoint variants. Total API 406 → **416**.
+
+```text
+ak-text-3xl  ak-text-4xl  ak-text-5xl  ak-text-6xl
+ak-tracking-tight  ak-tracking-normal  ak-tracking-wide
+ak-measure  ak-flow  ak-section
+```
+
+Upstreamed from a consumer site, where they were written as local candidates. Non-breaking:
+`xs`–`2xl` are unchanged.
+
+**Display sizes are fluid `clamp()` tokens** — responsive type without breakpoint
+variants, consistent with D-024. The candidate values had `3xl` at a 28px floor, *below*
+the fixed 32px `2xl`, so the scale inverted on every viewport under ~800px. The shipped
+values all share a `2rem` intercept and grow only in vw slope, floor and ceiling
+(36→40, 40→48, 44→60, 48→72px), which makes an inversion impossible at any width; a test
+sweeps 280–2560px to keep it that way. The rem intercept keeps them zoom-responsive.
+
+**`ak-flow` and `ak-section` are emitted with the base classes, not the utilities.** At
+equal (0,1,0) specificity the later rule wins, so placing them before the spacing
+utilities means `ak-pt-0` on the first section or `ak-mt-xl` on one flow child still
+works. `ak-flow` zeroes children's block margins first so the UA block-end margins the
+reset now keeps (D-042) do not stack on top of the flow space.
+
+**Box-sizing:** `ak-section` pads, so it joins the D-025 list (79 → 80). `ak-measure`
+does not: a measure is a character count, and padding should add to it rather than eat
+into it.
+
 ## Unresolved
 
 - [ ] **Reserve the npm name** — availability confirmed (D-018, 2026-09-07: `anik-ui`

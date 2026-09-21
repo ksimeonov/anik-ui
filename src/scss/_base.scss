@@ -38,3 +38,23 @@
 .ak-cq {
   container-type: inline-size;
 }
+
+// Vertical page rhythm (D-043). Structural, so it sits here rather than with the
+// utilities: a padding utility on the same element (e.g. ak-pt-0 on the first
+// section) comes later in source order and wins.
+.ak-section {
+  padding-block: var(--ak-section-space);
+}
+
+// Flow ("owl") spacing (D-043): every child after the first gets the same top
+// margin, so a stack of headings / paragraphs / lists spaces itself. Children's
+// block margins are zeroed first so UA margins (kept by the reset, D-042) do not
+// add to the flow space. Both rules are (0,1,0) and emitted before the
+// utilities, so ak-mt-* / ak-mb-* on a child still override the rhythm.
+.ak-flow > * {
+  margin-block: 0;
+}
+
+.ak-flow > * + * {
+  margin-block-start: var(--ak-flow-space);
+}

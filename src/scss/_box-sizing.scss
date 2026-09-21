@@ -14,7 +14,7 @@
 // Padding property tokens, mirrored in _utilities.scss.
 $_padding-tokens: 'p' 'px' 'py' 'pt' 'pb' 'ps' 'pe';
 
-$_selectors: '.ak-row, .ak-row > *, .ak-page, .ak-cq, .ak-flex, .ak-inline-flex';
+$_selectors: '.ak-row, .ak-row > *, .ak-page, .ak-section, .ak-cq, .ak-flex, .ak-inline-flex';
 
 @each $token in $_padding-tokens {
   @each $step in config.$space-steps {

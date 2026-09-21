@@ -6,7 +6,7 @@ alignment, typography, sizing and positioning utilities.
 
 - **CSS-first.** No JavaScript runtime in the package.
 - **Framework agnostic.** Angular, React, Vue, Svelte, plain HTML.
-- **Bounded API.** Exactly 406 generated classes, enumerated and asserted by
+- **Bounded API.** Exactly 416 generated classes, enumerated and asserted by
   the test suite (`npm test`).
 - **No unexpected global styles.** The reset is opt-in and never auto-enabled.
 
@@ -216,6 +216,46 @@ yourself when a flex child holds text, a `<pre>`, or a table that might not wrap
 
 `ak-w-screen` is deliberately **not** provided: `100vw` includes the scrollbar
 width and causes horizontal overflow.
+
+## Display type and prose
+
+Four fluid display sizes extend the `ak-text-*` scale. Each is a `clamp()` token that
+grows with the viewport between a floor and a ceiling, with a paired, tighter
+line-height — no breakpoint classes needed.
+
+| Class         | Size (narrow → wide) |
+| ------------- | -------------------- |
+| `ak-text-3xl` | 36 → 40px            |
+| `ak-text-4xl` | 40 → 48px            |
+| `ak-text-5xl` | 44 → 60px            |
+| `ak-text-6xl` | 48 → 72px            |
+
+`ak-tracking-tight` / `-normal` / `-wide` set letter-spacing (tighten display type,
+loosen small caps and labels).
+
+Three prose and rhythm classes:
+
+| Class        | What it does                                       | Token                 |
+| ------------ | -------------------------------------------------- | --------------------- |
+| `ak-measure` | Caps line length for readable text                 | `--ak-measure` (65ch) |
+| `ak-flow`    | Even vertical space between direct children        | `--ak-flow-space`     |
+| `ak-section` | Fluid block padding for page sections (64 → 120px) | `--ak-section-space`  |
+
+```html
+<section class="ak-section">
+  <div class="ak-page">
+    <h1 class="ak-text-5xl ak-tracking-tight">Title</h1>
+    <div class="ak-flow ak-measure">
+      <p>…</p>
+      <p>…</p>
+    </div>
+  </div>
+</section>
+```
+
+`--ak-flow-space` defaults to `1em`, resolved on each child, so the gap scales with the
+text it follows. Spacing utilities override both rhythm classes: `ak-pt-0` on the first
+section, or `ak-mt-xl` on a single `ak-flow` child.
 
 ## Containment caveat
 

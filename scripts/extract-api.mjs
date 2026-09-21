@@ -16,7 +16,7 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const CSS = resolve(root, 'dist/anik-ui.css');
 const OUT = resolve(root, 'api/classes.txt');
-const EXPECTED_COUNT = 406;
+const EXPECTED_COUNT = 416;
 
 const mode = process.argv.includes('--write')
   ? 'write'

@@ -51,3 +51,10 @@ test('unprefixed utilities precede the first @media block', () => {
   assert.ok(css.search(/\.ak-dir-row\s*\{/) < firstMedia);
   assert.ok(css.search(/\.ak-hidden\s*\{/) < firstMedia);
 });
+
+test('ak-flow and ak-section precede the spacing utilities they must yield to', () => {
+  const firstSpacing = css.search(/\.ak-mt-0\s*\{/);
+  assert.ok(firstSpacing > -1);
+  assert.ok(css.search(/\.ak-flow > \* \+ \*\s*\{/) < firstSpacing);
+  assert.ok(css.search(/\.ak-section\s*\{/) < firstSpacing);
+});

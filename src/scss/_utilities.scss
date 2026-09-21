@@ -149,6 +149,19 @@ $_align-self: (
   font-weight: 400;
 }
 
+@each $step in config.$tracking-steps {
+  .ak-tracking-#{$step} {
+    letter-spacing: var(--ak-tracking-#{$step});
+  }
+}
+
+// Caps line length (D-043). For text blocks, not layout wrappers. Deliberately
+// NOT in the box-sizing list: a measure is a count of characters, so padding
+// should add to it rather than eat into it.
+.ak-measure {
+  max-inline-size: var(--ak-measure);
+}
+
 // ---------------------------------------------------------------------------
 // Spacing — 160 classes (spec 03 / D-024). Logical properties throughout:
 // s/e = inline-start/inline-end (RTL-aware), t/b = block-start/block-end.

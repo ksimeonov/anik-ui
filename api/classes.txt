@@ -161,6 +161,7 @@ ak-flex-nowrap
 ak-flex-sm
 ak-flex-wrap
 ak-flex-xl
+ak-flow
 ak-font-bold
 ak-font-normal
 ak-gap-0
@@ -272,6 +273,7 @@ ak-me-md
 ak-me-sm
 ak-me-xl
 ak-me-xs
+ak-measure
 ak-min-h-0
 ak-min-h-screen
 ak-min-w-0
@@ -381,6 +383,7 @@ ak-py-xl
 ak-py-xs
 ak-relative
 ak-row
+ak-section
 ak-self-auto
 ak-self-center
 ak-self-end
@@ -392,6 +395,10 @@ ak-sr-only
 ak-start-0
 ak-sticky
 ak-text-2xl
+ak-text-3xl
+ak-text-4xl
+ak-text-5xl
+ak-text-6xl
 ak-text-center
 ak-text-end
 ak-text-lg
@@ -401,6 +408,9 @@ ak-text-start
 ak-text-xl
 ak-text-xs
 ak-top-0
+ak-tracking-normal
+ak-tracking-tight
+ak-tracking-wide
 ak-w-auto
 ak-w-fit
 ak-w-full
