@@ -165,6 +165,9 @@ Acceptance gates, not activities. Each has a pass condition.
       fall back to a granular token in a reviewed GitHub Environment
 - [ ] Enable provenance
 - [ ] Deploy playground to GitHub Pages from CI
+- [ ] Switch the GitHub default branch back to `main` — set to `dev` until the first
+      release, because `main` still holds only GitLab's template README. The `main`
+      ruleset targets `refs/heads/main` by name, so the switch does not move it
 - [ ] Publish first `0.1.0`
 - [ ] Verify fresh consumer can install from npm
 
