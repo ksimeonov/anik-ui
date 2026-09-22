@@ -498,6 +498,29 @@ a three-day-old package is not worth it. Adding a class or token now carries one
 check: that the name is not already used by `@yunyoujun/ak-ui`. Other near names on npm
 (`anik`, `akui`, `ak-vue3`, …) are unrelated or abandoned.
 
+### D-050 — A manual `publish-tag` path in `release.yml` for half-finished releases
+The first real release run (2026-09-22) created the `v0.1.0` tag and the release commit
+on `main`, then `npm publish` failed with `403 … OIDC permission denied for this action`.
+The OIDC exchange and the provenance signature had both succeeded: a new npm trusted
+publisher may only **stage** publishes until "direct publish" is ticked under its
+"Allowed actions", which the maintainer then did. (An earlier run had already failed in
+`generateNotes` on a preset / writer version mismatch, fixed by #9, without side
+effects.)
+
+semantic-release cannot finish such a release: it sees the tag and finds nothing new.
+Rejected fixes: deleting the tag and release commit (needs a force-push to protected
+`main`); publishing from a laptop (the one version without provenance); skipping to
+`0.1.1` (a changelog entry for a version that never shipped, and it needs a releasable
+commit that does not exist).
+
+Chosen: `release.yml` gets a `workflow_dispatch` input `tag` and a `publish-tag` job.
+It lives in the same file and environment because npm trusts that workflow file and the
+`release` environment, so OIDC and provenance apply unchanged. Guards: the tag must
+match `vX.Y.Z`, be in the history of `main`, equal the version in `package.json`, and
+not already be on npm; npm must be at least 11.5.1; the tagged commit is built and
+tested before publishing. The push-triggered jobs skip on dispatch and vice versa.
+Procedure in spec 12.
+
 ## Unresolved
 
 - [ ] **"AniK" trademark sanity check** — D-018 rule step 4, maintainer judgment.
