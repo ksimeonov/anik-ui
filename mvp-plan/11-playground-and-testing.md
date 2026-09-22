@@ -16,7 +16,7 @@ live demo.
 - row/columns, including **nested rows** and **more than 12 columns of children**
 - responsive layout
 - container queries, including **`ak-cq` and `ak-row` on the same element**
-- the `ak-fixed`-inside-`ak-cq` containment caveat, shown deliberately
+- a live test of `ak-fixed` inside `ak-cq` (D-046), with a `contain: layout` control
 - spacing and the `--ak-row-gap` responsive-spacing escape hatch
 - flex, including **fixed sidebar + filling main region** (`ak-flex-1`)
 - alignment

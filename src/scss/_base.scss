@@ -33,8 +33,9 @@
   padding-inline: var(--ak-page-gutter, var(--ak-space-md));
 }
 
-// Establishes a query container. See the containment caveats in spec 02 /
-// the README before putting this above a fixed-position element.
+// Establishes a query container: style + inline-size containment and a new
+// formatting context, no layout containment (D-046). See the side effects in
+// spec 02 / the README.
 .ak-cq {
   container-type: inline-size;
 }

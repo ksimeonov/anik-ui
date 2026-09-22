@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Reset on</title>
+    <!-- Identical to reset-off.html except for this one stylesheet. -->
+    <link rel="stylesheet" href="../dist/anik-reset.css" />
+    <link rel="stylesheet" href="../dist/anik-ui.css" />
+    <style>
+      /* Frame chrome only: make edges and box sizes visible. */
+      body {
+        font-family: system-ui, sans-serif;
+        outline: 2px dashed #4f7cff;
+        outline-offset: -2px;
+      }
+      .frame-box {
+        inline-size: 10rem;
+        padding: 1rem;
+        border: 4px solid currentColor;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Heading</h1>
+    <p>Paragraph with a UA block-end margin kept by the reset (D-042).</p>
+    <p>
+      Averyveryveryveryveryverylongunbrokenwordthatwouldotherwiseoverflowthecolumn
+    </p>
+    <ul role="list">
+      <li>list with role="list"</li>
+      <li>no bullets or padding</li>
+    </ul>
+    <ul>
+      <li>plain list keeps bullets</li>
+    </ul>
+    <figure>figure — no 40px inline indent</figure>
+    <dl>
+      <dt>dt</dt>
+      <dd>dd — no 40px inline indent</dd>
+    </dl>
+    <div class="frame-box">width 10rem + padding + border</div>
+    <p>
+      <button type="button">button inherits font</button>
+      <svg width="24" height="24" aria-hidden="true">
+        <circle cx="12" cy="12" r="10" fill="currentColor" />
+      </svg>
+    </p>
+    <textarea aria-label="Textarea"></textarea>
+  </body>
+</html>

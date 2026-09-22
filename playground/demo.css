@@ -2,36 +2,69 @@
  * Presentation only. NOT published (see package.json "files" and .npmignore
  * rules in mvp-plan/08-build-and-package.md). Nothing here should be needed to
  * make AniK UI classes work — it exists to make the demo legible.
+ *
+ * Loaded between the reset and anik-ui.css, i.e. in the "your component styles"
+ * slot of the required import order, so every AniK UI utility on a demo element
+ * wins over the presentation rules below.
  */
 :root {
   color-scheme: light dark;
+  --demo-accent: #4f7cff;
+  --demo-line: color-mix(in srgb, currentColor 20%, transparent);
 }
 
 body {
   font-family: system-ui, sans-serif;
-  margin: 0;
-  padding: 2rem;
-  max-width: 72rem;
-  margin-inline: auto;
+}
+
+code {
+  font-size: 0.875em;
+}
+
+pre {
+  overflow-x: auto;
+  padding: 0.75rem;
+  border-radius: 6px;
+  background: color-mix(in srgb, currentColor 6%, transparent);
 }
 
 .demo-header {
-  margin-block-end: 2rem;
+  padding-block: 2rem 1rem;
 }
 
-section {
-  border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+.demo-toc a {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  border: 1px solid var(--demo-line);
+  border-radius: 999px;
+  text-decoration: none;
+  color: inherit;
+  font-size: 0.875rem;
+}
+
+.demo-section {
+  border: 1px solid var(--demo-line);
   border-radius: 8px;
   padding: 1rem;
   margin-block-end: 1.5rem;
 }
 
-section > h2 {
+.demo-section > h2 {
   margin-block-start: 0;
   font-size: 1rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   opacity: 0.7;
+}
+
+.demo-section h3 {
+  font-size: 0.95rem;
+  margin-block: 1.5rem 0.5rem;
+}
+
+.demo-note {
+  font-size: 0.875rem;
+  opacity: 0.8;
 }
 
 /* Visualise layout boxes without affecting AniK UI behaviour. */
@@ -40,4 +73,147 @@ section > h2 {
   border: 1px dashed color-mix(in srgb, currentColor 30%, transparent);
   padding: 0.5rem;
   text-align: center;
+}
+
+.demo-accent {
+  background: color-mix(in srgb, var(--demo-accent) 25%, transparent);
+  border-color: var(--demo-accent);
+}
+
+/* A container the reader can drag narrower/wider (bottom-end corner). */
+.demo-resize {
+  resize: horizontal;
+  overflow: hidden;
+  inline-size: 100%;
+  min-inline-size: 12rem;
+  max-inline-size: 100%;
+  padding: 0.5rem;
+  border: 2px solid var(--demo-accent);
+  border-radius: 6px;
+}
+
+.demo-tall {
+  min-block-size: 8rem;
+}
+
+/* Frames a demo that overflows on purpose, so the page itself does not scroll. */
+.demo-scroll-x {
+  overflow-x: auto;
+  padding: 0.25rem;
+  border: 1px dashed var(--demo-line);
+}
+
+.demo-scroll {
+  block-size: 10rem;
+  overflow: auto;
+  border: 1px solid var(--demo-line);
+}
+
+.demo-frame {
+  inline-size: 100%;
+  block-size: 30rem;
+  border: 1px solid var(--demo-line);
+  border-radius: 6px;
+  background: Canvas;
+}
+
+.demo-badge {
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  background: var(--demo-accent);
+  color: white;
+  font-size: 0.75rem;
+}
+
+/* Viewport breakpoint indicator — mirrors $breakpoints in _config.scss. */
+.demo-bp {
+  z-index: 10;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background: var(--demo-accent);
+  color: white;
+  font:
+    600 0.8rem system-ui,
+    sans-serif;
+}
+
+.demo-bp::after {
+  content: 'viewport: base (< 576px)';
+}
+
+@media (min-width: 576px) {
+  .demo-bp::after {
+    content: 'viewport: sm (≥ 576px)';
+  }
+}
+
+@media (min-width: 768px) {
+  .demo-bp::after {
+    content: 'viewport: md (≥ 768px)';
+  }
+}
+
+@media (min-width: 992px) {
+  .demo-bp::after {
+    content: 'viewport: lg (≥ 992px)';
+  }
+}
+
+@media (min-width: 1200px) {
+  .demo-bp::after {
+    content: 'viewport: xl (≥ 1200px)';
+  }
+}
+
+/* Container threshold label — must sit inside an ak-cq element; mirrors
+   $container-breakpoints in _config.scss. */
+.demo-cq-label {
+  display: block;
+  margin-block-end: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--demo-accent);
+}
+
+.demo-cq-label::after {
+  content: 'container: base (< 320px)';
+}
+
+@container (min-width: 320px) {
+  .demo-cq-label::after {
+    content: 'container: c-sm (≥ 320px)';
+  }
+}
+
+@container (min-width: 480px) {
+  .demo-cq-label::after {
+    content: 'container: c-md (≥ 480px)';
+  }
+}
+
+@container (min-width: 640px) {
+  .demo-cq-label::after {
+    content: 'container: c-lg (≥ 640px)';
+  }
+}
+
+@container (min-width: 800px) {
+  .demo-cq-label::after {
+    content: 'container: c-xl (≥ 800px)';
+  }
+}
+
+/*
+ * The --ak-row-gap escape hatch, written the way a consumer would write it
+ * (README "Responsive spacing escape hatch"). This is the one functional rule in
+ * this file, and it is here on purpose: it is consumer CSS driving a token.
+ */
+.demo-card-grid {
+  --ak-row-gap: var(--ak-space-2xs);
+}
+
+@media (min-width: 768px) {
+  .demo-card-grid {
+    --ak-row-gap: var(--ak-space-2xl);
+  }
 }

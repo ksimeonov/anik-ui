@@ -128,20 +128,37 @@ Acceptance gates, not activities. Each has a pass condition.
 - [x] Size budget: `anik-ui.min.css` ≤ 25 KB gz, `anik-reset.min.css` ≤ 2 KB gz
 - [x] `npm pack --dry-run` contains only `dist/`, `src/scss/`, README, LICENSE, CHANGELOG
       — CHANGELOG absent until the release pipeline generates it; `files` already lists it
-- [~] Playground demos built — only the `ak-min-w-0` demo exists; the other sections
-      in `playground/index.html` are still heading-only stubs, and D-041/D-043
-      additions (display type, tracking, `ak-measure`/`ak-flow`/`ak-section`) have none
-- [ ] Playground manually verified against the browser checklist
-- [ ] Responsive checks: Chrome, Firefox, Safari, one iOS Safari at the support floor
-- [ ] Container-query checks, including `ak-cq` + `ak-row` on the same element
-- [ ] Containment caveat verified: `ak-fixed` inside `ak-cq` behaves as documented
+- [x] Playground demos built — every spec 11 demonstration, plus page/layout tokens
+      (D-041), display type / tracking / prose (D-043), sizing (D-039) and RTL. No
+      JavaScript: resizable frames + CSS-driven threshold labels for container
+      queries; `reset-on.html` / `reset-off.html` and `containment.html` in iframes.
+      Uses 128 of the 416 classes, all checked against `api/classes.txt`
+- [~] Playground verified against the browser checklist — automated pass
+      2026-09-22 in current engines only (Playwright: Chromium 151, WebKit / Safari
+      26.5, Firefox 153) at 375 / 800 / 1280px: no horizontal overflow, no console
+      errors, visibility ranges, `ak-min-w-0` pair. Still needs a human pass and
+      the floor versions
+- [~] Responsive checks — current Chrome, Firefox, Safari engines pass (above);
+      iOS Safari and the D-027 floor versions not yet checked
+- [~] Container-query checks, including `ak-cq` + `ak-row` on the same element —
+      current engines pass: 1 → 2 (c-md) → 4 (c-lg) per line, container variant
+      beats viewport variant, same card stacks/unstacks by container. Floor
+      versions not yet checked
+- [~] Containment caveat verified: `ak-fixed` inside `ak-cq` behaves as documented
+      — the old caveat did **not** reproduce in Chromium 151, WebKit 26.5 or Firefox
+      153, and the current spec applies no layout containment. README and specs 02 /
+      06 / 11 / 13 reworded as "`ak-cq` side effects" (D-046). Still to do: run
+      `playground/containment.html` at the D-027 floor versions and adjust the README
+      note if one of them captures
 - [ ] Degradation check: below-floor browser keeps the default layout, does not break
 - [ ] Install local tarball into sample consumer project — Verdaccio tooling is ready
       (`npm run local:registry` / `npm run local:publish`, spec 09), not yet exercised
 - [ ] Angular consumer: compiled CSS **and both Sass entrypoint forms** resolve
 - [ ] React or Vue consumer, plus plain HTML consumer
 - [ ] Import-order check: a utility overrides a component rule in a real consumer app
-- [ ] RTL spot check: `dir="rtl"` page lays out correctly with `ak-ps-*` / `ak-ms-*`
+- [~] RTL spot check: `dir="rtl"` page lays out correctly with `ak-ps-*` / `ak-ms-*`
+      — playground `#rtl` renders mirrored in Chromium (padding, `ak-ms-auto`,
+      `ak-start-0`, column order); needs a human look in the other engines
 
 ## Phase 4 — Release automation
 
@@ -203,10 +220,11 @@ dry run computes `0.1.0`.
 Outstanding, in order:
 1. Maintainer: configure the npm trusted publisher, then lock Publishing access to
    2FA-only (see Phase 4). Archive the GitLab project if not already done.
-2. Phase 3 manual gates — fill the playground stubs (spec 11, plus demos for the
-   D-041/D-043 additions), browser checklist, Verdaccio consumer checks (plain HTML,
-   Angular with both Sass entrypoint forms, React/Vue), import-order and RTL checks.
-   Trademark / similar-package scan (D-018 step 4).
+2. Phase 3 — playground built and passing in current engines. Remaining: decide
+   the containment-caveat wording (`[!]` above), human pass incl. iOS Safari and
+   the floor versions, Verdaccio consumer checks (plain HTML, Angular with both Sass
+   entrypoint forms, React/Vue), import-order check. Trademark / similar-package
+   scan (D-018 step 4).
 3. First release: `dev` → `main` PR titled `chore(release): …`, merged with a merge
    commit; verify the OIDC publish, switch the default branch back to `main`, and
    install `0.1.0` into a fresh consumer.
