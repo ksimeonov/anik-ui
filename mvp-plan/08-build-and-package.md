@@ -100,4 +100,4 @@ Validate with `npm pack --dry-run` and review the file list before the first rel
 
 - committed `package-lock.json` — CI uses `npm ci`
 - `.gitignore` covering `node_modules/`, `dist/`, `.idea/`, `*.tgz`
-- `engines` set to the Node LTS used in CI
+- no `engines` field: it binds every consumer. The repo's Node range is `devEngines.runtime`, and CI reads `.nvmrc` (D-047)

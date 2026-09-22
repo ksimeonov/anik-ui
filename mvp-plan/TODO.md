@@ -110,8 +110,9 @@ counterpart are provably identical apart from the at-rule wrapper.
 - [x] Fluid display type `ak-text-3xl`…`6xl`, `ak-tracking-*`, `ak-measure`,
       `ak-flow`, `ak-section` (D-043) — incl. a 280–2560px no-inversion sweep test
 
-Tests (`node --test`, 31 passing): API snapshot (`api/classes.txt`, 416),
-declaration tests (spec 11 §2), emission-order test (§3), reset tests, size-budget
+Tests (`node --test`, 35 passing): API snapshot (`api/classes.txt`, 416),
+declaration tests (spec 11 §2), emission-order test (§3), reset tests, source-map
+test (D-047), size-budget
 test (§4 — `anik-ui.min.css` 3.3 KB gz / 25 KB, `anik-reset.min.css` 0.5 KB gz / 2 KB;
 measured 2026-09-21).
 
@@ -166,9 +167,10 @@ Acceptance gates, not activities. Each has a pass condition.
       plain HTML, Vite and Angular (Chromium). **Finding:** `@use 'anik-ui'` at the top
       of the component stylesheet loses (verified, Angular); README now shows
       `meta.load-css` last (verified in Vite and Angular) or ordered files
-- [ ] Minified builds ship without source maps — D-036 and the Phase 1 note say they
-      ship for both entrypoints, but `build:min` (lightningcss) has emitted none since
-      the switch. Fix the build (`--sourcemap`) or correct D-036
+- [x] Minified builds ship source maps again (D-047) — `build:min` (lightningcss)
+      had emitted none since the switch. Now `--sourcemap`, run from `dist/` so the
+      URLs are file-relative; `test/source-maps.test.mjs` checks all four
+      stylesheets' maps resolve (and fails on the old build)
 - [ ] Webpack `sass-loader` outside Angular — not covered by the consumer checks
 - [~] RTL spot check: `dir="rtl"` page lays out correctly with `ak-ps-*` / `ak-ms-*`
       — playground `#rtl` renders mirrored in Chromium (padding, `ak-ms-auto`,
@@ -236,13 +238,13 @@ dry run computes `0.1.0`.
 Ordered by what affects the shipped package first. **Agent** steps are done in this
 repo; **Maintainer** steps need npm / GitHub / GitLab access or a human eye.
 
-1. **Agent — consumer checks via Verdaccio** (Phase 3) — **done 2026-09-22**, see Phase 3. Install the packaged
+1. **Agent — consumer checks via Verdaccio** (Phase 3) — **done 2026-09-22**, see Phase 3. Installed the packaged
    `anik-ui` into throwaway plain HTML, Angular and React/Vite projects. Every
    `exports` path, both Sass entrypoint forms inside real toolchains, and the
    import-order override. Fix whatever breaks before anything else.
-2. **Agent — `engines` scoping** (needs maintainer OK: it changes published
-   metadata). `engines.node` applies to every consumer; move the Node requirement to
-   `devEngines` / `.nvmrc` so a CSS-only package does not warn or fail on Node 20.
+2. **Agent — `engines` scoping** — **done 2026-09-22** (D-047). `engines` removed;
+   `devEngines.runtime` (`^22.22.2 || >=24.15.0`) guards the repo, `.nvmrc` pins
+   CI. Source maps for the minified builds fixed in the same change.
 3. **Agent — floor and degradation browsers.** Old Playwright builds for Chromium 111
    and Firefox 113 (containment test, playground) and a pre-container-query Chromium
    (degradation check). Safari 16.4 cannot be reproduced this way.
