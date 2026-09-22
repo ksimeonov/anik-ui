@@ -58,7 +58,9 @@ try {
     `${JSON.stringify({ ...manifest, version: localVersion }, null, 2)}\n`
   );
 
-  execFileSync('npm', ['publish', '--registry', REGISTRY], {
+  // npm refuses to publish a prerelease without an explicit dist-tag. `latest`
+  // keeps `npm install anik-ui@latest` pulling the newest local build.
+  execFileSync('npm', ['publish', '--registry', REGISTRY, '--tag', 'latest'], {
     cwd: root,
     stdio: 'inherit',
     env: {
