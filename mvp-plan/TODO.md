@@ -44,12 +44,10 @@ Legend:
 - [x] Initial version strategy (D-032)
 - [x] publish only from main
 - [x] automated versioning/release notes/tagging
-- [~] **Verify npm package name availability and reserve it** — decision rule in D-018.
-      Availability **verified 2026-09-07**: `anik-ui` (unscoped) is free on the public
-      registry. Reservation still pending: placeholder staged at `reserve/`, needs an
-      authenticated `npm publish` by the maintainer. No longer blocks Phase 1 (per the
-      "Prep placeholder + start Phase 1" decision); must be done before the Phase 4
-      first release. See updated D-018.
+- [x] **Verify npm package name availability and reserve it** — decision rule in D-018.
+      Availability verified 2026-09-07; **reserved 2026-09-22** by publishing the
+      `reserve/` placeholder as `anik-ui@0.0.1` (maintainer `ksimeonov`, 2FA on).
+      Trademark / similar-package scan (D-018 step 4) still outstanding.
 
 ## Phase 1 — Repository bootstrap
 
@@ -147,7 +145,7 @@ Acceptance gates, not activities. Each has a pass condition.
 
 ## Phase 4 — Release automation
 
-- [x] Decide repository host (D-038) — GitHub, `ksimeonov/anik-ui`; GitLab project archived
+- [x] Decide repository host (D-038) — GitHub, `ksimeonov/anik-ui` (GitLab archive: maintainer)
 - [x] Add Conventional Commits guidance to CONTRIBUTING.md — "Commit convention" section
 - [x] Configure required PR checks — `.github/workflows/pr-checks.yml` (`checks`: lint,
       format, build, tests, pack; PRs into `dev`/`main` + pushes to `dev`) and
@@ -166,15 +164,16 @@ Acceptance gates, not activities. Each has a pass condition.
 - [x] Seed annotated `v0.0.0` tag on `main` — on `7829609`, pushed 2026-09-21
 - [x] Configure semantic-release + changelog + git plugins — `.releaserc.json`,
       `conventionalcommits` preset. Dry run on the branch computed **0.1.0** from 4 `feat`
-- [~] Let the release bot's version/CHANGELOG commit through the `main` ruleset (D-045)
-      — deploy key 163964288 (write) created, private half is `RELEASE_DEPLOY_KEY` in
-      the `release` environment (deployments limited to `main`). **Maintainer:** add
-      `DeployKey` as a bypass actor on ruleset 23765513 (blocked for the agent)
-- [ ] Configure npm trusted publishing (OIDC) — needs the package to exist on npm first
-      (reserve step). **Maintainer:** npmjs.com → `anik-ui` → Settings → Trusted
+- [x] Let the release bot's version/CHANGELOG commit through the `main` ruleset (D-045)
+      — deploy key 163964288 (write), private half is `RELEASE_DEPLOY_KEY` in the
+      `release` environment (deployments limited to `main`); `DeployKey` is the only
+      bypass actor on ruleset 23765513
+- [ ] Configure npm trusted publishing (OIDC) — package exists (`0.0.1` placeholder).
+      **Maintainer:** npmjs.com → `anik-ui` → Settings → Trusted
       publisher → GitHub Actions: `ksimeonov` / `anik-ui` / `release.yml` / environment
       `release`. **Verify the exchange on the first release**; fallback is a granular
-      `NPM_TOKEN` secret in the `release` environment
+      `NPM_TOKEN` secret in the `release` environment. Then set Publishing access to
+      "Require two-factor authentication and disallow tokens"
 - [x] Enable provenance — automatic with trusted publishing (`id-token: write`)
 - [ ] Deploy playground to GitHub Pages from CI
 - [ ] Switch the GitHub default branch back to `main` — set to `dev` until the first
@@ -185,24 +184,29 @@ Acceptance gates, not activities. Each has a pass condition.
 
 ## Current next action
 
-_Synced 2026-09-21 against `dev` @ `7c1973e`._
+_Synced 2026-09-22 against `dev` @ `9be8b6a`._
 
 Phases 1 and 2 are committed on `dev`; `main` still holds only the initial commit.
-Verified today: `npm test` (31/31, includes build + API check) · `npm run lint` ·
-`npm run format:check` · `npm pack --dry-run` (18 files, 21.6 kB) · `anik-ui` still
-unclaimed on the public registry.
+Verified 2026-09-21: `npm test` (31/31, includes build + API check) · `npm run lint` ·
+`npm run format:check` · `npm pack --dry-run` (18 files, 21.6 kB). `anik-ui@0.0.1`
+placeholder published 2026-09-22.
 
 Post-MVP additions landed since Phase 2: sizing family (D-039), `--ak-viewport-block`
 (D-040), declared layout tokens (D-041), block-start-only reset margins (D-042),
 lightningcss minification, and fluid display type / tracking / prose primitives
 (D-043). API is **416** classes. Overflow utilities remain deliberately deferred.
 
-Repository moved to GitHub (`ksimeonov/anik-ui`, D-038); the GitLab project is archived.
+Repository moved to GitHub (`ksimeonov/anik-ui`, D-038). PR checks, the `main`
+ruleset and the release workflow (D-044, D-045) are live; `v0.0.0` is seeded and a
+dry run computes `0.1.0`.
 
 Outstanding, in order:
-1. Maintainer: `cd reserve && npm login && npm publish` to reserve `anik-ui@0.0.1`;
-   trademark / similar-package scan (D-018 step 4).
+1. Maintainer: configure the npm trusted publisher, then lock Publishing access to
+   2FA-only (see Phase 4). Archive the GitLab project if not already done.
 2. Phase 3 manual gates — fill the playground stubs (spec 11, plus demos for the
    D-041/D-043 additions), browser checklist, Verdaccio consumer checks (plain HTML,
    Angular with both Sass entrypoint forms, React/Vue), import-order and RTL checks.
-3. Phase 4 release automation, then merge `dev` → `main` for the first `0.1.0`.
+   Trademark / similar-package scan (D-018 step 4).
+3. First release: `dev` → `main` PR titled `chore(release): …`, merged with a merge
+   commit; verify the OIDC publish, switch the default branch back to `main`, and
+   install `0.1.0` into a fresh consumer.
