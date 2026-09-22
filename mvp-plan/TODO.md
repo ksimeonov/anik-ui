@@ -202,8 +202,8 @@ Acceptance gates, not activities. Each has a pass condition.
       — deploy key 163964288 (write), private half is `RELEASE_DEPLOY_KEY` in the
       `release` environment (deployments limited to `main`); `DeployKey` is the only
       bypass actor on ruleset 23765513
-- [ ] Configure npm trusted publishing (OIDC) — package exists (`0.0.1` placeholder).
-      **Maintainer:** npmjs.com → `anik-ui` → Settings → Trusted
+- [x] Configure npm trusted publishing (OIDC) — set up by the maintainer 2026-09-22:
+      npmjs.com → `anik-ui` → Settings → Trusted
       publisher → GitHub Actions: `ksimeonov` / `anik-ui` / `release.yml` / environment
       `release`. **Verify the exchange on the first release**; fallback is a granular
       `NPM_TOKEN` secret in the `release` environment. Then set Publishing access to
@@ -258,8 +258,8 @@ repo; **Maintainer** steps need npm / GitHub / GitLab access or a human eye.
    deployed to GitHub Pages from the release workflow, plus the README link; a test
    that fails when the playground uses a class not in `api/classes.txt`;
    similar-package scan on npm (D-018 step 4, name half).
-5. **Maintainer:** merge the open PRs; configure the npm trusted publisher and lock
-   Publishing access to 2FA-only; archive GitLab and `git remote remove gitlab`;
+5. **Maintainer:** merge the open PRs; ~~configure the npm trusted publisher~~ (done);
+   lock Publishing access to 2FA-only; ~~decide the `ak-` prefix~~ (kept, D-049); archive GitLab and `git remote remove gitlab`;
    install `gh` properly (then delete `.git/gh`, re-run `gh auth setup-git`); trademark
    half of D-018 step 4; human playground pass incl. iOS Safari and Safari 16.4.
 6. **First release:** `dev` → `main` PR titled `chore(release): 0.1.0`, merged with a
