@@ -31,12 +31,32 @@ Four entry points are published:
 | `anik-ui/reset`     | optional reset, expanded     |
 | `anik-ui/reset/min` | optional reset, minified     |
 
-Sass source is also shipped:
+Sass source is also shipped. `@use` has to come before any other rule in a file, so
+load the utilities **last** with `meta.load-css` to keep the required import order:
 
 ```scss
-@use 'anik-ui'; // utilities + layout
-@use 'anik-ui/scss/reset'; // optional reset
+@use 'sass:meta';
+@use 'anik-ui/scss/reset'; // optional reset, first
+
+// …your component styles…
+
+@include meta.load-css('anik-ui'); // utilities + layout, last
 ```
+
+Separate files listed in order work too — for example Angular's `styles` array:
+a file with `@use 'anik-ui/scss/reset'`, then your styles, then a file with
+`@use 'anik-ui'`. Do **not** put `@use 'anik-ui'` at the top of the file that holds
+your component styles: the utilities are then emitted first and lose every tie.
+
+How the specifier resolves depends on the toolchain:
+
+| Toolchain                                      | Write                                   |
+| ---------------------------------------------- | --------------------------------------- |
+| Vite, Angular (read the package `exports` map) | `anik-ui`, `anik-ui/scss/reset`         |
+| Dart Sass CLI or JS API with the Node importer | `pkg:anik-ui`, `pkg:anik-ui/scss/reset` |
+
+For the CLI that means `sass --pkg-importer=node`. Paths into `anik-ui/src/…` are not
+part of the public API, and Vite rejects them because they are not exported.
 
 Plain HTML:
 
