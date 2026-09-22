@@ -485,20 +485,24 @@ Chromium 104 and Firefox 102, before container queries — `@container` blocks a
 container layouts stay at the default single column, viewport variants still apply,
 and nothing overflows or throws: the documented degradation holds.
 
+### D-049 — Keep the `ak-` prefix despite `@yunyoujun/ak-ui`
+The similar-package scan (D-018 step 4, 2026-09-22) found `@yunyoujun/ak-ui`, first
+published 2026-09-19 as "framework-agnostic CSS primitives", using `.ak-` classes and
+`--ak-` custom properties too. No names are identical: 0 of its 271 classes and 0 of
+its 151 custom properties match ours, so both can load on one page today. Nothing stops
+a future clash, and shared `:root` tokens would silently override each other.
+
+Decided by the maintainer: **keep `ak-`.** It is short, established across the spec
+and tests, and renaming 416 classes and every token to avoid a hypothetical clash with
+a three-day-old package is not worth it. Adding a class or token now carries one more
+check: that the name is not already used by `@yunyoujun/ak-ui`. Other near names on npm
+(`anik`, `akui`, `ak-vue3`, …) are unrelated or abandoned.
+
 ## Unresolved
 
 - [ ] **"AniK" trademark sanity check** — D-018 rule step 4, maintainer judgment.
-- [ ] **`ak-` prefix overlap with `@yunyoujun/ak-ui`** — found by the similar-package
-      scan (D-018 step 4, 2026-09-22). That package (first published 2026-09-19,
-      "framework-agnostic CSS primitives") also uses `.ak-` classes and `--ak-` custom
-      properties. No identical names today: 0 of its 271 classes and 0 of its 151
-      custom properties match ours, so both can load on one page. Nothing stops a
-      future clash, though, and `:root` tokens would silently override each other.
-      Decide before `0.1.0`: accept and document, or change the prefix while it is
-      still free to change. Other near names (`anik`, `akui`, `ak-vue3`, …) are
-      unrelated or abandoned packages; `ak-ui` and `anikui` are unclaimed.
-
-Resolved since: the npm name is reserved (`anik-ui@0.0.1`, 2026-09-22).
+Resolved since: the npm name is reserved (`anik-ui@0.0.1`, 2026-09-22); the `ak-`
+prefix overlap is accepted (D-049).
 
 All other previously-unresolved items are now decided:
 `~~exact numeric spacing token values~~` (D-019 — numeric scale rejected),
