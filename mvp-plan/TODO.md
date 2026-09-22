@@ -151,11 +151,25 @@ Acceptance gates, not activities. Each has a pass condition.
       `playground/containment.html` at the D-027 floor versions and adjust the README
       note if one of them captures
 - [ ] Degradation check: below-floor browser keeps the default layout, does not break
-- [ ] Install local tarball into sample consumer project — Verdaccio tooling is ready
-      (`npm run local:registry` / `npm run local:publish`, spec 09), not yet exercised
-- [ ] Angular consumer: compiled CSS **and both Sass entrypoint forms** resolve
-- [ ] React or Vue consumer, plus plain HTML consumer
-- [ ] Import-order check: a utility overrides a component rule in a real consumer app
+- [x] Install the packaged artifact into consumer projects — 2026-09-22 via Verdaccio
+      (`anik-ui@0.0.0-local.*`). `local:publish` was broken on npm ≥ 10 (prerelease
+      needs an explicit `--tag`); fixed. All `exports` subpaths resolve through Node
+- [x] Angular consumer (Angular 22, `@angular/build:application`): compiled CSS via
+      the `styles` array, bare Sass specifiers, `pkg:` and the `src/` path all build
+      and render. Results table in spec 09
+- [x] React consumer (Vite 8 + React 19) and plain HTML consumer: `import
+      'anik-ui/css'` and `<link>` to `dist/*.min.css` render correctly at 375 / 1024px.
+      **Finding:** Vite rejects `anik-ui/src/scss/index` (not exported) — the spec 09
+      "direct path fallback" was wrong; README now documents bare specifiers for
+      bundlers and `pkg:` for Dart Sass
+- [x] Import-order check — `ak-p-0` beats a component `.card { padding: 40px }` in
+      plain HTML, Vite and Angular (Chromium). **Finding:** `@use 'anik-ui'` at the top
+      of the component stylesheet loses (verified, Angular); README now shows
+      `meta.load-css` last (verified in Vite and Angular) or ordered files
+- [ ] Minified builds ship without source maps — D-036 and the Phase 1 note say they
+      ship for both entrypoints, but `build:min` (lightningcss) has emitted none since
+      the switch. Fix the build (`--sourcemap`) or correct D-036
+- [ ] Webpack `sass-loader` outside Angular — not covered by the consumer checks
 - [~] RTL spot check: `dir="rtl"` page lays out correctly with `ak-ps-*` / `ak-ms-*`
       — playground `#rtl` renders mirrored in Chromium (padding, `ak-ms-auto`,
       `ak-start-0`, column order); needs a human look in the other engines
@@ -217,14 +231,34 @@ Repository moved to GitHub (`ksimeonov/anik-ui`, D-038). PR checks, the `main`
 ruleset and the release workflow (D-044, D-045) are live; `v0.0.0` is seeded and a
 dry run computes `0.1.0`.
 
-Outstanding, in order:
-1. Maintainer: configure the npm trusted publisher, then lock Publishing access to
-   2FA-only (see Phase 4). Archive the GitLab project if not already done.
-2. Phase 3 — playground built and passing in current engines. Remaining: decide
-   the containment-caveat wording (`[!]` above), human pass incl. iOS Safari and
-   the floor versions, Verdaccio consumer checks (plain HTML, Angular with both Sass
-   entrypoint forms, React/Vue), import-order check. Trademark / similar-package
-   scan (D-018 step 4).
-3. First release: `dev` → `main` PR titled `chore(release): …`, merged with a merge
-   commit; verify the OIDC publish, switch the default branch back to `main`, and
-   install `0.1.0` into a fresh consumer.
+### Plan to `0.1.0` (written 2026-09-22)
+
+Ordered by what affects the shipped package first. **Agent** steps are done in this
+repo; **Maintainer** steps need npm / GitHub / GitLab access or a human eye.
+
+1. **Agent — consumer checks via Verdaccio** (Phase 3) — **done 2026-09-22**, see Phase 3. Install the packaged
+   `anik-ui` into throwaway plain HTML, Angular and React/Vite projects. Every
+   `exports` path, both Sass entrypoint forms inside real toolchains, and the
+   import-order override. Fix whatever breaks before anything else.
+2. **Agent — `engines` scoping** (needs maintainer OK: it changes published
+   metadata). `engines.node` applies to every consumer; move the Node requirement to
+   `devEngines` / `.nvmrc` so a CSS-only package does not warn or fail on Node 20.
+3. **Agent — floor and degradation browsers.** Old Playwright builds for Chromium 111
+   and Firefox 113 (containment test, playground) and a pre-container-query Chromium
+   (degradation check). Safari 16.4 cannot be reproduced this way.
+4. **Agent — docs and hygiene PR:** the 11-gaps minimum-width note in the README;
+   stale D-024 count (406 → 416) and README "being implemented" status; playground
+   deployed to GitHub Pages from the release workflow, plus the README link; a test
+   that fails when the playground uses a class not in `api/classes.txt`;
+   similar-package scan on npm (D-018 step 4, name half).
+5. **Maintainer:** merge the open PRs; configure the npm trusted publisher and lock
+   Publishing access to 2FA-only; archive GitLab and `git remote remove gitlab`;
+   install `gh` properly (then delete `.git/gh`, re-run `gh auth setup-git`); trademark
+   half of D-018 step 4; human playground pass incl. iOS Safari and Safari 16.4.
+6. **First release:** `dev` → `main` PR titled `chore(release): 0.1.0`, merged with a
+   merge commit; verify the OIDC publish (fallback: `NPM_TOKEN` in the `release`
+   environment); switch the default branch back to `main`; install `0.1.0` from npm
+   into a fresh consumer.
+
+Known and accepted: OIDC can only be proven by the first release; squash-only on
+`dev` stays convention unless a `dev` ruleset is wanted.

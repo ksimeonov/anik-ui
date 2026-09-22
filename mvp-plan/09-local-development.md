@@ -95,40 +95,37 @@ Before release, validate at least:
 
 The library itself must contain no dependency on any of those frameworks.
 
-## Sass entrypoint resolution — test both forms
+## Sass entrypoint resolution
 
 The most likely packaging failure is a Sass consumer that cannot resolve the package.
-Two forms must both work from the installed tarball, and both must be checked before
-release:
+**Verified 2026-09-22** by installing the published tarball from Verdaccio into
+throwaway consumers (`anik-ui@0.0.0-local.*`, Dart Sass 1.x):
 
-```scss
-@use 'anik-ui';                       // resolves via exports `sass` condition
-@use 'anik-ui/src/scss/index';        // direct path fallback
-```
+| `@use` specifier                  | Dart Sass CLI            | Vite 8 (`sass-embedded`) | Angular 22 (`@angular/build`) |
+| -------------------------------- | ------------------------ | ------------------------ | ----------------------------- |
+| `anik-ui`, `anik-ui/scss`        | fails                    | works                    | works                         |
+| `anik-ui/scss/reset`             | fails                    | works                    | works                         |
+| `pkg:anik-ui`, `pkg:…/scss/reset` | works (`--pkg-importer=node`) | fails (no importer)   | works                         |
+| `anik-ui/src/scss/index`         | works (`--load-path=node_modules`) | **fails: not exported** | works                 |
+| `anik-ui/css` (compiled CSS)     | fails                    | works                    | —                             |
 
-Sass `pkg:` URLs read the package `exports` map with the `sass` condition, but not every
-consumer toolchain implements the `pkg:` importer. Angular's build pipeline is the
-specific case to verify, since Angular is in the required consumer matrix.
+Consequences, reflected in the README:
 
-> **Verified against a local-registry install (Verdaccio):** the *bare* form
-> `@use 'anik-ui'` only resolves in toolchains that layer Node resolution onto
-> Sass — webpack `sass-loader`, Vite, Angular's builder. The plain Dart Sass CLI
-> needs the explicit scheme: `@use 'pkg:anik-ui'` (with `--pkg-importer=node`),
-> `@use 'pkg:anik-ui/css'`, `@use 'pkg:anik-ui/scss/reset'`. The
-> `@use 'anik-ui/src/scss/index'` direct-path fallback works everywhere with
-> `--load-path=node_modules`. All three resolved correctly from the packaged
-> tarball; this is the check the Angular consumer must repeat.
+- The documented forms are the bare specifiers for bundlers and `pkg:` for Dart Sass.
+  The old "direct path fallback" (`anik-ui/src/scss/index`) is **not** a fallback: Vite
+  enforces the `exports` map and `./src/*` is not exported. It is not public API.
+- `@use` must precede other rules, so `@use 'anik-ui'` at the top of a file that also
+  holds component styles emits the utilities **before** those styles and they lose ties
+  (verified in Angular: a `.card { padding: 40px }` rule beat `ak-p-0`). The supported
+  patterns are `@include meta.load-css('anik-ui')` after the component styles (verified
+  in Vite and Angular), or separate files in order (Angular `styles` array).
+- Not yet covered: webpack `sass-loader` outside Angular.
 
-Also verify the compiled-CSS paths from a real install:
-
-```scss
-@use 'anik-ui/css';
-@use 'anik-ui/reset';
-```
-
-```html
-<link rel="stylesheet" href="node_modules/anik-ui/dist/anik-ui.min.css">
-```
+Compiled-CSS paths from a real install — all verified: every `exports` subpath
+(`anik-ui`, `/css`, `/css/min`, `/reset`, `/reset/min`, `/scss`, `/scss/reset`,
+`/package.json`) resolves through Node; `import 'anik-ui/css'` works in Vite; Angular
+accepts `node_modules/anik-ui/dist/*.css` in its `styles` array; plain HTML links to
+`node_modules/anik-ui/dist/anik-ui.min.css` work.
 
 ## Verify import order
 
