@@ -299,12 +299,13 @@
       <section id="containment-caveat" class="demo-section">
         <h2>ak-fixed inside ak-cq — containment caveat</h2>
         <p class="demo-note ak-measure">
-          Early container-query drafts made an <code>ak-cq</code> element the
-          containing block for <code>position: fixed</code> descendants; the
-          current specification does not (D-046). This frame is a live test: it
-          shows what <em>your</em> browser does, next to a
-          <code>contain: layout</code> control that always captures. Run it in
-          every browser on the support matrix, especially the floor versions.
+          The original container-query specification made an
+          <code>ak-cq</code> element the containing block for
+          <code>position: fixed</code> descendants. Browsers at the support
+          floor (Chrome 111, Firefox 113, Safari 16.4) still do; current ones do
+          not (D-048). This frame is a live test: it shows what
+          <em>your</em> browser does, next to a
+          <code>contain: layout</code> control that always captures.
         </p>
         <iframe
           class="demo-frame"
