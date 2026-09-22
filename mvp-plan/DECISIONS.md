@@ -144,8 +144,9 @@ Viewport and container variants are generated **only** for columns, flex directi
 display/visibility. Everything else — spacing, alignment, typography, position — has no
 variants. Responsive spacing is served by the `--ak-row-gap` token pattern.
 
-Total generated classes: **406** (396 at MVP definition, plus the ten sizing utilities
-added by D-039), enumerated in `15-class-api-matrix.md` and asserted in CI.
+Total generated classes: **416** (396 at MVP definition, plus the ten sizing utilities
+added by D-039 and the ten display-type / tracking / prose classes added by D-043),
+enumerated in `15-class-api-matrix.md` and asserted in CI.
 
 ### D-025 — `box-sizing` ships in the core stylesheet
 Emitted as one generated selector list covering every padding utility and layout
@@ -486,12 +487,18 @@ and nothing overflows or throws: the documented degradation holds.
 
 ## Unresolved
 
-- [ ] **Reserve the npm name** — availability confirmed (D-018, 2026-09-07: `anik-ui`
-      is free). Placeholder staged at `reserve/`; needs an authenticated `npm publish`
-      by the maintainer. No longer blocks Phase 1; must be done before the Phase 4
-      first release.
-- [ ] **"AniK" trademark sanity check + similar-package scan** — D-018 rule step 4,
-      still outstanding.
+- [ ] **"AniK" trademark sanity check** — D-018 rule step 4, maintainer judgment.
+- [ ] **`ak-` prefix overlap with `@yunyoujun/ak-ui`** — found by the similar-package
+      scan (D-018 step 4, 2026-09-22). That package (first published 2026-09-19,
+      "framework-agnostic CSS primitives") also uses `.ak-` classes and `--ak-` custom
+      properties. No identical names today: 0 of its 271 classes and 0 of its 151
+      custom properties match ours, so both can load on one page. Nothing stops a
+      future clash, though, and `:root` tokens would silently override each other.
+      Decide before `0.1.0`: accept and document, or change the prefix while it is
+      still free to change. Other near names (`anik`, `akui`, `ak-vue3`, …) are
+      unrelated or abandoned packages; `ak-ui` and `anikui` are unclaimed.
+
+Resolved since: the npm name is reserved (`anik-ui@0.0.1`, 2026-09-22).
 
 All other previously-unresolved items are now decided:
 `~~exact numeric spacing token values~~` (D-019 — numeric scale rejected),

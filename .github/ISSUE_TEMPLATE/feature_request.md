@@ -5,7 +5,7 @@ title: 'feat: '
 labels: enhancement
 ---
 
-> The class API is bounded (406 classes) and enumerated in
+> The class API is bounded (416 classes) and enumerated in
 > `mvp-plan/15-class-api-matrix.md`. Additions need a decision recorded in
 > `mvp-plan/DECISIONS.md` first. Please check
 > `mvp-plan/14-future-roadmap.md` — it lists what was deliberately deferred.

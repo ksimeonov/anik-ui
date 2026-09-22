@@ -25,3 +25,4 @@ npm-debug.log*
 # local Verdaccio registry (config is tracked, runtime state is not)
 .verdaccio/*
 !.verdaccio/config.yaml
+_site/
