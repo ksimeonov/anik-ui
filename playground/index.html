@@ -1,0 +1,919 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AniK UI — Playground</title>
+
+    <!-- Import order: reset, then demo presentation CSS, then AniK UI utilities. -->
+    <link rel="stylesheet" href="../dist/anik-reset.css" />
+    <link rel="stylesheet" href="./demo.css" />
+    <link rel="stylesheet" href="../dist/anik-ui.css" />
+  </head>
+  <body>
+    <!-- Viewport breakpoint indicator: ak-fixed with no ak-cq ancestor. -->
+    <div
+      class="demo-bp ak-fixed ak-bottom-0 ak-end-0 ak-m-md"
+      aria-hidden="true"
+    ></div>
+
+    <header class="demo-header ak-page">
+      <h1 class="ak-text-4xl ak-tracking-tight ak-mb-sm">AniK UI Playground</h1>
+      <p class="ak-measure ak-mb-md">
+        Plain HTML and a small <code>demo.css</code> for presentation only. Run
+        <code>npm run build</code> first so <code>../dist/</code> exists. The
+        badge in the corner shows the active viewport breakpoint; resize the
+        window to watch it change.
+      </p>
+      <nav aria-label="Demos">
+        <ul role="list" class="demo-toc ak-flex ak-flex-wrap ak-gap-xs">
+          <li><a href="#row-columns">Row &amp; columns</a></li>
+          <li><a href="#page">Page wrapper</a></li>
+          <li><a href="#responsive">Responsive</a></li>
+          <li><a href="#container-queries">Container queries</a></li>
+          <li><a href="#containment-caveat">Containment caveat</a></li>
+          <li><a href="#spacing">Spacing</a></li>
+          <li><a href="#flex">Flex</a></li>
+          <li><a href="#alignment">Alignment</a></li>
+          <li><a href="#typography">Typography</a></li>
+          <li><a href="#prose">Display type &amp; prose</a></li>
+          <li><a href="#positioning">Positioning</a></li>
+          <li><a href="#visibility">Visibility</a></li>
+          <li><a href="#sr-only">ak-sr-only</a></li>
+          <li><a href="#sizing">Sizing</a></li>
+          <li><a href="#rtl">RTL</a></li>
+          <li><a href="#reset">Reset on vs. off</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="ak-page">
+      <!-- ================================================================ -->
+      <section id="row-columns" class="demo-section">
+        <h2>Row &amp; columns (nested, &gt;12 children)</h2>
+
+        <h3>12 children, no column class</h3>
+        <div class="ak-row">
+          <div class="demo-box">1</div>
+          <div class="demo-box">2</div>
+          <div class="demo-box">3</div>
+          <div class="demo-box">4</div>
+          <div class="demo-box">5</div>
+          <div class="demo-box">6</div>
+          <div class="demo-box">7</div>
+          <div class="demo-box">8</div>
+          <div class="demo-box">9</div>
+          <div class="demo-box">10</div>
+          <div class="demo-box">11</div>
+          <div class="demo-box">12</div>
+        </div>
+        <p class="demo-note ak-mt-xs">
+          Children without a column class take one track each (auto placement).
+        </p>
+
+        <h3>Spans</h3>
+        <div class="ak-row ak-mb-sm">
+          <div class="demo-box ak-col-8"><code>ak-col-8</code></div>
+          <div class="demo-box ak-col-4"><code>ak-col-4</code></div>
+        </div>
+        <div class="ak-row ak-mb-sm">
+          <div class="demo-box ak-col-4"><code>ak-col-4</code></div>
+          <div class="demo-box ak-col-4"><code>ak-col-4</code></div>
+          <div class="demo-box ak-col-4"><code>ak-col-4</code></div>
+        </div>
+        <div class="ak-row">
+          <div class="demo-box ak-col-3"><code>ak-col-3</code></div>
+          <div class="demo-box ak-col-6"><code>ak-col-6</code></div>
+          <div class="demo-box ak-col-auto">auto</div>
+          <div class="demo-box ak-col-auto">auto</div>
+          <div class="demo-box ak-col-auto">auto</div>
+        </div>
+
+        <h3>More than 12 columns of children — wraps to a new line</h3>
+        <div class="ak-row">
+          <div class="demo-box ak-col-3">1</div>
+          <div class="demo-box ak-col-3">2</div>
+          <div class="demo-box ak-col-3">3</div>
+          <div class="demo-box ak-col-3">4</div>
+          <div class="demo-box ak-col-3 demo-accent">5 (col 13+)</div>
+          <div class="demo-box ak-col-3 demo-accent">6</div>
+          <div class="demo-box ak-col-6 demo-accent">
+            7 (<code>ak-col-6</code>)
+          </div>
+        </div>
+        <p class="demo-note ak-mt-xs">
+          Seven children spanning 24 columns: the highlighted ones start a new
+          row, no <code>ak-row</code> wrapper per line needed.
+        </p>
+
+        <h3>Nested rows</h3>
+        <div class="ak-row">
+          <div class="demo-box ak-col-8">
+            <code>ak-col-8</code> containing its own 12-column row
+            <div class="ak-row ak-mt-sm">
+              <div class="demo-box demo-accent ak-col-4">4</div>
+              <div class="demo-box demo-accent ak-col-4">4</div>
+              <div class="demo-box demo-accent ak-col-4">4</div>
+            </div>
+          </div>
+          <div class="demo-box ak-col-4"><code>ak-col-4</code></div>
+        </div>
+
+        <h3>Flush grid — ak-gap-0</h3>
+        <div class="ak-row ak-gap-0">
+          <div class="demo-box ak-col-4">no gutter</div>
+          <div class="demo-box ak-col-4">no gutter</div>
+          <div class="demo-box ak-col-4">no gutter</div>
+        </div>
+
+        <h3>Wide content cannot blow out a track</h3>
+        <div class="ak-row">
+          <div class="demo-box ak-col-6 ak-text-start">
+            <pre
+              class="ak-m-0"
+            ><code>const wide = "a &lt;pre&gt; much wider than its column scrolls inside it";</code></pre>
+          </div>
+          <div class="demo-box ak-col-6">
+            <code>ak-col-6</code> keeps its half
+          </div>
+        </div>
+        <p class="demo-note ak-mt-xs">
+          <code>minmax(0, 1fr)</code> tracks plus <code>min-width: 0</code> on
+          every child: the <code>&lt;pre&gt;</code> scrolls instead of widening
+          the column.
+        </p>
+      </section>
+
+      <!-- ================================================================ -->
+      <section id="page" class="demo-section">
+        <h2>Page wrapper &amp; layout tokens</h2>
+        <p class="demo-note">
+          <code>ak-page</code> caps width at <code>--ak-page-max</code> (75rem)
+          with <code>--ak-page-gutter</code> side padding. Both are plain custom
+          properties, overridable per element (D-041).
+        </p>
+        <div class="ak-page demo-box ak-mb-sm" style="--ak-page-max: 30rem">
+          <code>ak-page</code> with <code>--ak-page-max: 30rem</code>
+        </div>
+        <div class="ak-page demo-box ak-mb-sm" style="--ak-page-max: none">
+          <code>--ak-page-max: none</code> — full width, gutters kept (no
+          <code>ak-page-fluid</code> class)
+        </div>
+        <div class="ak-row" style="--ak-row-gap: var(--ak-space-lg)">
+          <div class="demo-box ak-col-6">
+            <code>--ak-row-gap: var(--ak-space-lg)</code>
+          </div>
+          <div class="demo-box ak-col-6">on this row only</div>
+        </div>
+        <p class="demo-note ak-mt-xs ak-measure">
+          Mind the width: a 12-track row always has 11 gaps, even when every
+          child spans all 12. At <code>3xl</code> (64px) the row needs 704px
+          before any content, so wide gaps belong behind a breakpoint — see the
+          escape hatch under Spacing.
+        </p>
+      </section>
+
+      <!-- ================================================================ -->
+      <section id="responsive" class="demo-section">
+        <h2>Responsive layout (viewport)</h2>
+        <p class="demo-note">
+          Mobile-first: the unprefixed class applies everywhere, each
+          <code>-sm/-md/-lg/-xl</code> variant takes over from its breakpoint
+          up. Resize the window.
+        </p>
+
+        <h3>Cards: 1 → 2 (sm) → 4 (lg) per line</h3>
+        <div class="ak-row">
+          <div class="demo-box ak-col-12 ak-col-sm-6 ak-col-lg-3">Card 1</div>
+          <div class="demo-box ak-col-12 ak-col-sm-6 ak-col-lg-3">Card 2</div>
+          <div class="demo-box ak-col-12 ak-col-sm-6 ak-col-lg-3">Card 3</div>
+          <div class="demo-box ak-col-12 ak-col-sm-6 ak-col-lg-3">Card 4</div>
+        </div>
+        <p class="demo-note ak-mt-xs">
+          <code>ak-col-12 ak-col-sm-6 ak-col-lg-3</code>
+        </p>
+
+        <h3>Main + aside: stacked, side by side from md</h3>
+        <div class="ak-row">
+          <div class="demo-box ak-col-12 ak-col-md-8 demo-tall">
+            <code>ak-col-12 ak-col-md-8</code>
+          </div>
+          <aside class="demo-box ak-col-12 ak-col-md-4">
+            <code>ak-col-12 ak-col-md-4</code>
+          </aside>
+        </div>
+
+        <h3>Flex direction: column, row from md</h3>
+        <div class="ak-flex ak-dir-column ak-dir-md-row ak-gap-sm">
+          <div class="demo-box ak-flex-1">one</div>
+          <div class="demo-box ak-flex-1">two</div>
+          <div class="demo-box ak-flex-1">three</div>
+        </div>
+        <p class="demo-note ak-mt-xs">
+          <code>ak-flex ak-dir-column ak-dir-md-row</code>
+        </p>
+      </section>
+
+      <!-- ================================================================ -->
+      <section id="container-queries" class="demo-section">
+        <h2>Container queries (ak-cq + ak-row together)</h2>
+        <p class="demo-note">
+          Drag the bottom-end corner of the blue frame. The layout follows the
+          width of the <code>ak-cq</code> element, not the window. Thresholds
+          are their own scale: c-sm 320, c-md 480, c-lg 640, c-xl 800px (D-023).
+        </p>
+
+        <h3><code>ak-cq</code> and <code>ak-row</code> on the same element</h3>
+        <div class="demo-resize">
+          <div class="ak-cq ak-row">
+            <span class="demo-cq-label ak-col-12" aria-hidden="true"></span>
+            <div class="demo-box ak-col-12 ak-col-c-md-6 ak-col-c-lg-3">A</div>
+            <div class="demo-box ak-col-12 ak-col-c-md-6 ak-col-c-lg-3">B</div>
+            <div class="demo-box ak-col-12 ak-col-c-md-6 ak-col-c-lg-3">C</div>
+            <div class="demo-box ak-col-12 ak-col-c-md-6 ak-col-c-lg-3">D</div>
+          </div>
+        </div>
+        <p class="demo-note ak-mt-xs">
+          Children use <code>ak-col-12 ak-col-c-md-6 ak-col-c-lg-3</code>. The
+          row's children query the row itself, because a container query looks
+          at the nearest ancestor container.
+        </p>
+
+        <h3>Same component, two containers</h3>
+        <p class="demo-note">
+          Identical markup in a narrow and a wide column. On a wide window the
+          card stacks in the narrow column and goes horizontal in the wide one —
+          same viewport, different containers. Below md both columns are full
+          width, so both cards follow the page width.
+        </p>
+        <div class="ak-row">
+          <div class="ak-col-12 ak-col-md-4">
+            <article class="ak-cq demo-box ak-text-start">
+              <span class="demo-cq-label" aria-hidden="true"></span>
+              <div class="ak-flex ak-dir-column ak-dir-c-md-row ak-gap-sm">
+                <div class="demo-box demo-accent ak-flex-none">media</div>
+                <div class="ak-flex-1">
+                  <strong>Card title</strong>
+                  <p class="ak-m-0">
+                    <code>ak-dir-column ak-dir-c-md-row</code>
+                  </p>
+                </div>
+              </div>
+            </article>
+          </div>
+          <div class="ak-col-12 ak-col-md-8">
+            <article class="ak-cq demo-box ak-text-start">
+              <span class="demo-cq-label" aria-hidden="true"></span>
+              <div class="ak-flex ak-dir-column ak-dir-c-md-row ak-gap-sm">
+                <div class="demo-box demo-accent ak-flex-none">media</div>
+                <div class="ak-flex-1">
+                  <strong>Card title</strong>
+                  <p class="ak-m-0">
+                    <code>ak-dir-column ak-dir-c-md-row</code>
+                  </p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <h3>Container variants beat viewport variants</h3>
+        <div class="demo-resize">
+          <div class="ak-cq ak-row">
+            <span class="demo-cq-label ak-col-12" aria-hidden="true"></span>
+            <div class="demo-box ak-col-12 ak-col-lg-6 ak-col-c-lg-4">
+              <code>ak-col-lg-6 ak-col-c-lg-4</code>
+            </div>
+          </div>
+        </div>
+        <p class="demo-note ak-mt-xs">
+          On a large viewport, narrow the frame below 640px and the box goes to
+          half width (the viewport variant); widen it past 640px and the
+          container variant wins with a third. <code>@container</code> blocks
+          are emitted after every <code>@media</code> block, so at equal
+          specificity the container variant takes precedence.
+        </p>
+      </section>
+
+      <!-- ================================================================ -->
+      <section id="containment-caveat" class="demo-section">
+        <h2>ak-fixed inside ak-cq — containment caveat</h2>
+        <p class="demo-note ak-measure">
+          The original container-query specification made an
+          <code>ak-cq</code> element the containing block for
+          <code>position: fixed</code> descendants. Browsers at the support
+          floor (Chrome 111, Firefox 113, Safari 16.4) still do; current ones do
+          not (D-048). This frame is a live test: it shows what
+          <em>your</em> browser does, next to a
+          <code>contain: layout</code> control that always captures.
+        </p>
+        <iframe
+          class="demo-frame"
+          style="block-size: 22rem"
+          src="./containment.html"
+          title="Live test: ak-fixed inside ak-cq"
+        ></iframe>
+      </section>
+
+      <!-- ================================================================ -->
+      <section id="spacing" class="demo-section">
+        <h2>Spacing &amp; the --ak-row-gap escape hatch</h2>
+
+        <h3>Scale: ak-p-*</h3>
+        <div class="ak-flex ak-flex-wrap ak-items-end ak-gap-sm">
+          <div class="demo-box ak-p-0"><code>0</code></div>
+          <div class="demo-box ak-p-2xs"><code>2xs</code></div>
+          <div class="demo-box ak-p-xs"><code>xs</code></div>
+          <div class="demo-box ak-p-sm"><code>sm</code></div>
+          <div class="demo-box ak-p-md"><code>md</code></div>
+          <div class="demo-box ak-p-lg"><code>lg</code></div>
+          <div class="demo-box ak-p-xl"><code>xl</code></div>
+          <div class="demo-box ak-p-2xl"><code>2xl</code></div>
+          <div class="demo-box ak-p-3xl"><code>3xl</code></div>
+        </div>
+        <p class="demo-note ak-mt-xs">
+          2, 4, 8, 16, 24, 32, 48, 64px — all through <code>--ak-space-*</code>.
+        </p>
+
+        <h3>Per-side and axis utilities</h3>
+        <div class="ak-flex ak-flex-wrap ak-gap-md">
+          <div class="demo-box ak-pt-xl"><code>ak-pt-xl</code></div>
+          <div class="demo-box ak-px-2xl"><code>ak-px-2xl</code></div>
+          <div class="demo-box ak-py-lg"><code>ak-py-lg</code></div>
+          <div class="demo-box ak-ps-3xl"><code>ak-ps-3xl</code></div>
+        </div>
+
+        <h3>Gap: independent axes</h3>
+        <div class="ak-flex ak-flex-wrap ak-gap-x-xl ak-gap-y-2xs">
+          <div class="demo-box">x: xl</div>
+          <div class="demo-box">y: 2xs</div>
+          <div class="demo-box">x: xl</div>
+          <div class="demo-box">y: 2xs</div>
+          <div class="demo-box">x: xl</div>
+          <div class="demo-box">y: 2xs</div>
+          <div class="demo-box">x: xl</div>
+          <div class="demo-box">y: 2xs</div>
+          <div class="demo-box">x: xl</div>
+          <div class="demo-box">y: 2xs</div>
+          <div class="demo-box">x: xl</div>
+          <div class="demo-box">y: 2xs</div>
+        </div>
+        <p class="demo-note ak-mt-xs">
+          <code>ak-flex ak-flex-wrap ak-gap-x-xl ak-gap-y-2xs</code>
+        </p>
+
+        <h3>Auto margins: ak-ms-auto pushes to the end</h3>
+        <div class="ak-flex ak-gap-sm">
+          <div class="demo-box">Logo</div>
+          <div class="demo-box">Nav</div>
+          <div class="demo-box demo-accent ak-ms-auto">
+            <code>ak-ms-auto</code>
+          </div>
+        </div>
+
+        <h3>Responsive spacing escape hatch</h3>
+        <p class="demo-note ak-measure">
+          Spacing utilities have no breakpoint variants by design. The row below
+          has no gap class at all; the consumer CSS in
+          <code>demo.css</code> moves <code>--ak-row-gap</code> from 2xs to 2xl
+          at md:
+        </p>
+        <pre><code>.demo-card-grid { --ak-row-gap: var(--ak-space-2xs); }
+@media (min-width: 768px) {
+  .demo-card-grid { --ak-row-gap: var(--ak-space-2xl); }
+}</code></pre>
+        <div class="ak-row demo-card-grid">
+          <div class="demo-box ak-col-6 ak-col-md-3">1</div>
+          <div class="demo-box ak-col-6 ak-col-md-3">2</div>
+          <div class="demo-box ak-col-6 ak-col-md-3">3</div>
+          <div class="demo-box ak-col-6 ak-col-md-3">4</div>
+        </div>
+      </section>
+
+      <!-- ================================================================ -->
+      <section id="flex" class="demo-section">
+        <h2>Flex — fixed sidebar + filling main (ak-flex-1)</h2>
+
+        <div class="ak-flex ak-gap-md demo-tall">
+          <aside class="demo-box ak-flex-none" style="inline-size: 12rem">
+            <code>ak-flex-none</code><br />
+            (width from your own CSS)
+          </aside>
+          <div class="demo-box demo-accent ak-flex-1 ak-min-w-0">
+            <code>ak-flex-1 ak-min-w-0</code> — takes all remaining space
+          </div>
+        </div>
+
+        <h3>Grow, shrink and auto</h3>
+        <div class="ak-flex ak-gap-sm ak-mb-sm">
+          <div class="demo-box ak-grow"><code>ak-grow</code></div>
+          <div class="demo-box ak-grow-0"><code>ak-grow-0</code></div>
+          <div class="demo-box ak-flex-auto">
+            <code>ak-flex-auto</code> with a longer label
+          </div>
+        </div>
+        <div
+          class="ak-flex ak-gap-sm"
+          style="inline-size: 16rem; max-inline-size: 100%"
+        >
+          <div class="demo-box ak-shrink-0">
+            <code>ak-shrink-0</code>&nbsp;stays&nbsp;wide
+          </div>
+          <div class="demo-box ak-shrink ak-min-w-0">
+            <code>ak-shrink</code>
+          </div>
+        </div>
+
+        <h3>Wrap vs. nowrap</h3>
+        <div class="ak-flex ak-flex-wrap ak-gap-xs ak-mb-sm">
+          <span class="demo-box">wrap</span><span class="demo-box">wrap</span
+          ><span class="demo-box">wrap</span><span class="demo-box">wrap</span
+          ><span class="demo-box">wrap</span><span class="demo-box">wrap</span
+          ><span class="demo-box">wrap</span><span class="demo-box">wrap</span
+          ><span class="demo-box">wrap</span><span class="demo-box">wrap</span
+          ><span class="demo-box">wrap</span><span class="demo-box">wrap</span>
+        </div>
+        <div
+          class="ak-flex ak-flex-nowrap ak-gap-xs demo-scroll"
+          style="block-size: auto"
+        >
+          <span class="demo-box ak-shrink-0">nowrap</span
+          ><span class="demo-box ak-shrink-0">nowrap</span
+          ><span class="demo-box ak-shrink-0">nowrap</span
+          ><span class="demo-box ak-shrink-0">nowrap</span
+          ><span class="demo-box ak-shrink-0">nowrap</span
+          ><span class="demo-box ak-shrink-0">nowrap</span
+          ><span class="demo-box ak-shrink-0">nowrap</span
+          ><span class="demo-box ak-shrink-0">nowrap</span
+          ><span class="demo-box ak-shrink-0">nowrap</span
+          ><span class="demo-box ak-shrink-0">nowrap</span
+          ><span class="demo-box ak-shrink-0">nowrap</span
+          ><span class="demo-box ak-shrink-0">nowrap</span>
+        </div>
+
+        <h3>Inline flex</h3>
+        <p>
+          Text with an
+          <span class="ak-inline-flex ak-items-center ak-gap-2xs demo-box">
+            <span class="demo-badge">●</span> ak-inline-flex
+          </span>
+          chip in the middle of a sentence.
+        </p>
+      </section>
+
+      <!-- ================================================================ -->
+      <section id="alignment" class="demo-section">
+        <h2>Alignment</h2>
+
+        <h3>ak-items-* (cross axis)</h3>
+        <div class="ak-row">
+          <div class="ak-col-6 ak-col-md-4">
+            <div class="ak-flex ak-items-start ak-gap-xs demo-box demo-tall">
+              <span class="demo-box demo-accent">start</span>
+              <span class="demo-box demo-accent ak-text-2xl">A</span>
+            </div>
+          </div>
+          <div class="ak-col-6 ak-col-md-4">
+            <div class="ak-flex ak-items-center ak-gap-xs demo-box demo-tall">
+              <span class="demo-box demo-accent">center</span>
+              <span class="demo-box demo-accent ak-text-2xl">A</span>
+            </div>
+          </div>
+          <div class="ak-col-6 ak-col-md-4">
+            <div class="ak-flex ak-items-end ak-gap-xs demo-box demo-tall">
+              <span class="demo-box demo-accent">end</span>
+              <span class="demo-box demo-accent ak-text-2xl">A</span>
+            </div>
+          </div>
+          <div class="ak-col-6 ak-col-md-4">
+            <div class="ak-flex ak-items-stretch ak-gap-xs demo-box demo-tall">
+              <span class="demo-box demo-accent">stretch</span>
+              <span class="demo-box demo-accent ak-text-2xl">A</span>
+            </div>
+          </div>
+          <div class="ak-col-6 ak-col-md-4">
+            <div class="ak-flex ak-items-baseline ak-gap-xs demo-box demo-tall">
+              <span class="demo-box demo-accent">baseline</span>
+              <span class="demo-box demo-accent ak-text-2xl">A</span>
+            </div>
+          </div>
+        </div>
+
+        <h3>ak-justify-* (main axis)</h3>
+        <div class="ak-flex ak-justify-start ak-gap-xs demo-box ak-mb-xs">
+          <span class="demo-box demo-accent">start</span
+          ><span class="demo-box demo-accent">·</span>
+        </div>
+        <div class="ak-flex ak-justify-center ak-gap-xs demo-box ak-mb-xs">
+          <span class="demo-box demo-accent">center</span
+          ><span class="demo-box demo-accent">·</span>
+        </div>
+        <div class="ak-flex ak-justify-end ak-gap-xs demo-box ak-mb-xs">
+          <span class="demo-box demo-accent">end</span
+          ><span class="demo-box demo-accent">·</span>
+        </div>
+        <div class="ak-flex ak-justify-between demo-box">
+          <span class="demo-box demo-accent">between</span
+          ><span class="demo-box demo-accent">·</span
+          ><span class="demo-box demo-accent">·</span>
+        </div>
+
+        <h3>ak-self-* per item</h3>
+        <div class="ak-flex ak-gap-xs demo-box demo-tall">
+          <span class="demo-box demo-accent ak-self-start">self-start</span>
+          <span class="demo-box demo-accent ak-self-center">self-center</span>
+          <span class="demo-box demo-accent ak-self-end">self-end</span>
+          <span class="demo-box demo-accent ak-self-stretch">self-stretch</span>
+          <span class="demo-box demo-accent ak-self-auto">self-auto</span>
+        </div>
+
+        <h3>The same classes on ak-row (grid)</h3>
+        <div class="ak-row ak-items-center demo-box demo-tall">
+          <div class="demo-box demo-accent ak-col-4">
+            <code>ak-row ak-items-center</code>
+          </div>
+          <div class="demo-box demo-accent ak-col-4 ak-self-end">
+            <code>ak-self-end</code>
+          </div>
+          <div class="demo-box demo-accent ak-col-4 ak-self-stretch">
+            <code>ak-self-stretch</code>
+          </div>
+        </div>
+        <p class="demo-note ak-mt-xs">
+          The values are <code>start</code>/<code>end</code>, not
+          <code>flex-start</code>/<code>flex-end</code>, so they work in grid
+          and flex alike.
+        </p>
+      </section>
+
+      <!-- ================================================================ -->
+      <section id="typography" class="demo-section">
+        <h2>Typography</h2>
+
+        <h3>Text scale with paired line-heights</h3>
+        <div class="ak-flow" style="--ak-flow-space: var(--ak-space-xs)">
+          <p class="ak-text-xs"><code>ak-text-xs</code> The quick brown fox</p>
+          <p class="ak-text-sm"><code>ak-text-sm</code> The quick brown fox</p>
+          <p class="ak-text-md"><code>ak-text-md</code> The quick brown fox</p>
+          <p class="ak-text-lg"><code>ak-text-lg</code> The quick brown fox</p>
+          <p class="ak-text-xl"><code>ak-text-xl</code> The quick brown fox</p>
+          <p class="ak-text-2xl">
+            <code>ak-text-2xl</code> The quick brown fox
+          </p>
+        </div>
+
+        <h3>Weight and alignment</h3>
+        <p class="ak-font-bold"><code>ak-font-bold</code> Bold text</p>
+        <h4 class="ak-font-normal ak-text-lg">
+          <code>ak-font-normal</code> on a heading
+        </h4>
+        <p class="demo-box ak-text-start"><code>ak-text-start</code></p>
+        <p class="demo-box ak-text-center"><code>ak-text-center</code></p>
+        <p class="demo-box ak-text-end"><code>ak-text-end</code></p>
+      </section>
+
+      <!-- ================================================================ -->
+      <section id="prose" class="demo-section">
+        <h2>Display type, tracking &amp; prose (D-043)</h2>
+
+        <h3>Fluid display sizes — resize the window</h3>
+        <div class="ak-flow" style="--ak-flow-space: var(--ak-space-sm)">
+          <p class="ak-text-3xl ak-tracking-tight">3xl — 36 → 40px</p>
+          <p class="ak-text-4xl ak-tracking-tight">4xl — 40 → 48px</p>
+          <p class="ak-text-5xl ak-tracking-tight">5xl — 44 → 60px</p>
+          <p class="ak-text-6xl ak-tracking-tight">6xl — 48 → 72px</p>
+        </div>
+
+        <h3>Tracking</h3>
+        <p class="ak-text-2xl ak-tracking-tight">ak-tracking-tight</p>
+        <p class="ak-text-2xl ak-tracking-normal">ak-tracking-normal</p>
+        <p
+          class="ak-text-sm ak-tracking-wide"
+          style="text-transform: uppercase"
+        >
+          ak-tracking-wide — for small caps and labels
+        </p>
+
+        <h3>ak-measure + ak-flow</h3>
+        <div class="ak-flow ak-measure demo-box ak-text-start">
+          <h4 class="ak-text-xl">A readable column</h4>
+          <p>
+            <code>ak-measure</code> caps the line length at 65 characters, where
+            long-form text is comfortable to read. <code>ak-flow</code> puts the
+            same space between each direct child, whatever the elements are.
+          </p>
+          <p>
+            The flow space is <code>1em</code>, resolved on each child, so it
+            scales with the text it follows.
+          </p>
+          <p class="ak-mt-2xl">
+            This paragraph has <code>ak-mt-2xl</code>: spacing utilities
+            override the rhythm, because <code>ak-flow</code> is emitted before
+            them.
+          </p>
+        </div>
+
+        <h3>ak-section — fluid block padding (64 → 120px)</h3>
+        <div class="ak-section demo-box">
+          <code>ak-section</code>
+        </div>
+        <div class="ak-section ak-pt-0 demo-box ak-mt-sm">
+          <code>ak-section ak-pt-0</code> — a padding utility wins
+        </div>
+      </section>
+
+      <!-- ================================================================ -->
+      <section id="positioning" class="demo-section">
+        <h2>Positioning</h2>
+
+        <div class="ak-row">
+          <div class="ak-col-12 ak-col-md-4">
+            <h3>Corner badge</h3>
+            <div class="ak-relative demo-box demo-tall ak-pt-2xl">
+              <code>ak-relative</code>
+              <span class="demo-badge ak-absolute ak-top-0 ak-end-0 ak-m-xs">
+                ak-absolute ak-top-0 ak-end-0
+              </span>
+            </div>
+          </div>
+
+          <div class="ak-col-12 ak-col-md-4">
+            <h3>Overlay</h3>
+            <div class="ak-relative demo-box demo-tall">
+              <code>ak-relative</code>
+              <div
+                class="ak-absolute ak-inset-0 ak-flex ak-items-center ak-justify-center demo-accent"
+              >
+                <code>ak-absolute ak-inset-0</code>
+              </div>
+            </div>
+          </div>
+
+          <div class="ak-col-12 ak-col-md-4">
+            <h3>Sticky header</h3>
+            <div class="demo-scroll">
+              <div
+                class="ak-sticky ak-top-0 demo-box"
+                style="background: Canvas"
+              >
+                <code>ak-sticky ak-top-0</code>
+              </div>
+              <p class="ak-p-sm">Scroll this box.</p>
+              <p class="ak-p-sm">The header stays at the top of it.</p>
+              <p class="ak-p-sm">Line</p>
+              <p class="ak-p-sm">Line</p>
+              <p class="ak-p-sm">Line</p>
+              <p class="ak-p-sm">Line</p>
+              <p class="ak-p-sm">Line</p>
+            </div>
+          </div>
+        </div>
+
+        <h3>Start / bottom offsets</h3>
+        <div class="ak-relative demo-box demo-tall">
+          <span class="demo-badge ak-absolute ak-bottom-0 ak-start-0 ak-m-xs">
+            ak-absolute ak-bottom-0 ak-start-0
+          </span>
+        </div>
+        <p class="demo-note ak-mt-xs">
+          Offsets are logical: <code>ak-start-0</code> is the left edge in LTR
+          and the right edge in RTL (see the RTL section).
+        </p>
+      </section>
+
+      <!-- ================================================================ -->
+      <section id="visibility" class="demo-section">
+        <h2>Visibility — hide at one size, restore at another</h2>
+        <p class="demo-note">
+          Resize the window and watch which boxes exist. Each box names the
+          viewport range it is visible in.
+        </p>
+
+        <div class="ak-flex ak-flex-wrap ak-gap-sm">
+          <div class="demo-box ak-block ak-hidden-md">
+            <code>ak-hidden-md</code><br />visible below md only
+          </div>
+          <div class="demo-box demo-accent ak-hidden ak-block-md">
+            <code>ak-hidden ak-block-md</code><br />visible from md up
+          </div>
+          <div class="demo-box ak-hidden-sm ak-block-lg">
+            <code>ak-hidden-sm ak-block-lg</code><br />hidden sm–lg, restored at
+            lg
+          </div>
+          <div class="demo-box ak-hidden ak-flex-md ak-hidden-xl ak-gap-xs">
+            <code>ak-hidden ak-flex-md ak-hidden-xl</code>
+            <span>— flex from md to xl only</span>
+          </div>
+        </div>
+
+        <h3>By container width</h3>
+        <div class="demo-resize">
+          <div class="ak-cq">
+            <span class="demo-cq-label" aria-hidden="true"></span>
+            <div class="ak-flex ak-flex-wrap ak-gap-sm">
+              <div class="demo-box ak-hidden-c-md">
+                <code>ak-hidden-c-md</code> — narrow containers only
+              </div>
+              <div class="demo-box demo-accent ak-hidden ak-inline-block-c-md">
+                <code>ak-hidden ak-inline-block-c-md</code> — from c-md up
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h3>Display utilities</h3>
+        <p>
+          <span class="ak-block demo-box ak-mb-xs"
+            ><code>ak-block</code> on a span</span
+          >
+          <span class="ak-inline-block demo-box"
+            ><code>ak-inline-block</code></span
+          >
+          <span class="ak-inline-block demo-box"
+            ><code>ak-inline-block</code></span
+          >
+          <span class="ak-inline demo-box"><code>ak-inline</code></span>
+        </p>
+      </section>
+
+      <!-- ================================================================ -->
+      <section id="sr-only" class="demo-section">
+        <h2>ak-sr-only</h2>
+        <p class="demo-note ak-measure">
+          Visually hidden, still in the accessibility tree. Open the browser's
+          accessibility inspector, or use a screen reader, to check that these
+          controls have names.
+        </p>
+        <div class="ak-flex ak-items-center ak-gap-md">
+          <button type="button" class="demo-box">
+            <span aria-hidden="true">✕</span>
+            <span class="ak-sr-only">Close dialog</span>
+          </button>
+          <form class="ak-flex ak-gap-xs" role="search" action="#sr-only">
+            <label for="demo-search" class="ak-sr-only">Search the docs</label>
+            <input id="demo-search" type="search" placeholder="Search…" />
+            <button type="submit">Go</button>
+          </form>
+        </div>
+        <p class="demo-note ak-mt-xs">
+          The button's accessible name is “Close dialog”; the search field's is
+          “Search the docs”.
+        </p>
+      </section>
+
+      <!-- ================================================================ -->
+      <section id="sizing" class="demo-section">
+        <h2>Sizing</h2>
+
+        <h3>ak-w-full / ak-w-fit</h3>
+        <p class="demo-box ak-w-full">
+          <code>ak-w-full</code> — fills the inline axis.
+        </p>
+        <p class="demo-box ak-w-fit">
+          <code>ak-w-fit</code> — shrinks to content, capped by the parent.
+        </p>
+
+        <h3>ak-min-w-0 — the flex overflow fix</h3>
+        <p>
+          Both rows hold the same wide <code>&lt;pre&gt;</code>. A flex child's
+          automatic minimum size is its <code>min-content</code> width, so
+          without <code>ak-min-w-0</code> the main region refuses to shrink and
+          the row overflows (the dashed frame scrolls to show it). With it, the
+          main region takes its share and the <code>&lt;pre&gt;</code> scrolls.
+          <code>ak-row</code> does this for its children automatically.
+        </p>
+
+        <p>
+          <strong>Without</strong> <code>ak-min-w-0</code> — the row overflows:
+        </p>
+        <div class="demo-scroll-x ak-mb-md">
+          <div class="ak-flex ak-gap-md">
+            <aside class="demo-box ak-flex-none">Sidebar</aside>
+            <div class="demo-box ak-flex-1 ak-text-start">
+              <pre
+                class="ak-m-0"
+              ><code>const config = { breakpoints: { sm: "576px", md: "768px", lg: "992px", xl: "1200px" }, containerBreakpoints: { "c-sm": "320px", "c-md": "480px", "c-lg": "640px", "c-xl": "800px" } };</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <p><strong>With</strong> <code>ak-min-w-0</code> — the pre scrolls:</p>
+        <div class="demo-scroll-x">
+          <div class="ak-flex ak-gap-md">
+            <aside class="demo-box ak-flex-none">Sidebar</aside>
+            <div class="demo-box ak-flex-1 ak-min-w-0 ak-text-start">
+              <pre
+                class="ak-m-0"
+              ><code>const config = { breakpoints: { sm: "576px", md: "768px", lg: "992px", xl: "1200px" }, containerBreakpoints: { "c-sm": "320px", "c-md": "480px", "c-lg": "640px", "c-xl": "800px" } };</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <h3>ak-h-full inside a sized parent</h3>
+        <div class="demo-box demo-tall ak-flex">
+          <div class="demo-box demo-accent ak-h-full ak-w-full">
+            <code>ak-h-full</code>
+          </div>
+        </div>
+
+        <h3>ak-min-h-screen vs ak-h-screen</h3>
+        <p>
+          Both read <code>--ak-viewport-block</code> (default
+          <code>100dvb</code>). The <code>min-</code> variant is the one you
+          usually want: it fills the viewport but still grows for taller content
+          instead of clipping it. Resize / scroll on a phone to see
+          <code>dvb</code> track the browser chrome.
+        </p>
+        <div
+          class="demo-box ak-min-h-screen ak-flex ak-items-center ak-justify-center ak-text-center"
+        >
+          <span
+            ><code>ak-min-h-screen</code> — fills the viewport, grows if the
+            content is taller.</span
+          >
+        </div>
+      </section>
+
+      <!-- ================================================================ -->
+      <section id="rtl" class="demo-section">
+        <h2>RTL — logical properties flip</h2>
+        <p class="demo-note ak-measure">
+          The same markup twice, the second inside <code>dir="rtl"</code>. Every
+          inline-axis utility is logical, so start/end swap sides with no extra
+          classes.
+        </p>
+        <div class="ak-row">
+          <div class="ak-col-12 ak-col-md-6" dir="ltr">
+            <p class="demo-note"><code>dir="ltr"</code></p>
+            <div class="ak-relative demo-box ak-ps-3xl ak-text-start">
+              <span class="demo-badge ak-absolute ak-top-0 ak-start-0 ak-m-xs"
+                >start</span
+              >
+              <code>ak-ps-3xl ak-text-start</code>
+              <div class="ak-flex ak-gap-xs ak-mt-sm">
+                <span class="demo-box">first</span>
+                <span class="demo-box demo-accent ak-ms-auto"
+                  ><code>ak-ms-auto</code></span
+                >
+              </div>
+              <div class="ak-row ak-mt-sm">
+                <div class="demo-box ak-col-8">col-8</div>
+                <div class="demo-box ak-col-4">col-4</div>
+              </div>
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-md-6" dir="rtl">
+            <p class="demo-note"><code>dir="rtl"</code></p>
+            <div class="ak-relative demo-box ak-ps-3xl ak-text-start">
+              <span class="demo-badge ak-absolute ak-top-0 ak-start-0 ak-m-xs"
+                >start</span
+              >
+              <code>ak-ps-3xl ak-text-start</code>
+              <div class="ak-flex ak-gap-xs ak-mt-sm">
+                <span class="demo-box">first</span>
+                <span class="demo-box demo-accent ak-ms-auto"
+                  ><code>ak-ms-auto</code></span
+                >
+              </div>
+              <div class="ak-row ak-mt-sm">
+                <div class="demo-box ak-col-8">col-8</div>
+                <div class="demo-box ak-col-4">col-4</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================ -->
+      <section id="reset" class="demo-section">
+        <h2>Reset on vs. off</h2>
+        <p class="demo-note ak-measure">
+          The reset is global, so each side is its own document. The two frames
+          load the same markup; only the left one loads
+          <code>anik-reset.css</code>. Look at the body margin (dashed outline),
+          headings, the long word, <code>role="list"</code>, the
+          <code>dd</code> indent, the fixed-width box, the button font and the
+          SVG.
+        </p>
+        <div class="ak-row">
+          <div class="ak-col-12 ak-col-md-6">
+            <h3>Reset on</h3>
+            <iframe
+              class="demo-frame"
+              src="./reset-on.html"
+              title="Sample with the reset"
+            ></iframe>
+          </div>
+          <div class="ak-col-12 ak-col-md-6">
+            <h3>Reset off</h3>
+            <iframe
+              class="demo-frame"
+              src="./reset-off.html"
+              title="Sample without the reset"
+            ></iframe>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

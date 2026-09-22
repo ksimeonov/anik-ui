@@ -1,0 +1,29 @@
+// EMISSION ORDER 4–11 — responsive variants.
+//   4–7   @media (min-width: …)      sm 576 → md 768 → lg 992 → xl 1200
+//   8–11  @container (min-width: …)  c-sm 320 → c-md 480 → c-lg 640 → c-xl 800
+
+// Order is load-bearing and asserted in CI (spec 16 / D-028):
+//   - @media ascending  =>  mobile-first resolves correctly
+//   - all @container after all @media  =>  a container variant beats a viewport
+//     variant at the same breakpoint on an element carrying both.
+// Only three families get variants (D-024): columns, flex direction, and the
+// display / visibility family.
+
+@use 'config';
+@use 'generators';
+
+@each $name, $width in config.$breakpoints {
+  @media (min-width: $width) {
+    @include generators.columns('#{$name}-');
+    @include generators.directions('#{$name}-');
+    @include generators.display-family('-#{$name}');
+  }
+}
+
+@each $name, $width in config.$container-breakpoints {
+  @container (min-width: #{$width}) {
+    @include generators.columns('c-#{$name}-');
+    @include generators.directions('c-#{$name}-');
+    @include generators.display-family('-c-#{$name}');
+  }
+}

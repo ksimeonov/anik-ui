@@ -1,0 +1,82 @@
+// Runtime token layer (D-010). Every utility references these custom properties
+// rather than hard-coding a literal, so a consumer can retheme the whole scale
+// without rebuilding the Sass.
+
+:root {
+  // Spacing scale (D-019). --ak-space-0 is 0, never a surprise value.
+  --ak-space-0: 0;
+  --ak-space-2xs: 0.125rem; // 2px
+  --ak-space-xs: 0.25rem; // 4px
+  --ak-space-sm: 0.5rem; // 8px
+  --ak-space-md: 1rem; // 16px
+  --ak-space-lg: 1.5rem; // 24px
+  --ak-space-xl: 2rem; // 32px
+  --ak-space-2xl: 3rem; // 48px
+  --ak-space-3xl: 4rem; // 64px
+
+  // Typography sizes with paired line-heights (D-031).
+  --ak-font-size-xs: 0.75rem;
+  --ak-font-size-sm: 0.875rem;
+  --ak-font-size-md: 1rem;
+  --ak-font-size-lg: 1.25rem;
+  --ak-font-size-xl: 1.5rem;
+  --ak-font-size-2xl: 2rem;
+
+  // Fluid display sizes (D-043), 32px floor of 2xl upward. Every step shares the
+  // same 2rem intercept and only the vw slope, floor and ceiling grow, so a
+  // larger step is never smaller than the one below it at any viewport width.
+  // The rem intercept keeps them responsive to browser zoom and font settings.
+  --ak-font-size-3xl: clamp(2.25rem, 2rem + 0.75vw, 2.5rem); // 36 → 40px
+  --ak-font-size-4xl: clamp(2.5rem, 2rem + 1.5vw, 3rem); // 40 → 48px
+  --ak-font-size-5xl: clamp(2.75rem, 2rem + 2.25vw, 3.75rem); // 44 → 60px
+  --ak-font-size-6xl: clamp(3rem, 2rem + 3vw, 4.5rem); // 48 → 72px
+
+  --ak-line-height-xs: 1.5;
+  --ak-line-height-sm: 1.5;
+  --ak-line-height-md: 1.5;
+  --ak-line-height-lg: 1.4;
+  --ak-line-height-xl: 1.3;
+  --ak-line-height-2xl: 1.2;
+
+  // Large type needs tighter leading than text.
+  --ak-line-height-3xl: 1.15;
+  --ak-line-height-4xl: 1.05;
+  --ak-line-height-5xl: 1;
+  --ak-line-height-6xl: 0.95;
+
+  // Letter-spacing (D-043). Display sizes tighten; small caps / labels loosen.
+  --ak-tracking-tight: -0.01em;
+  --ak-tracking-normal: 0;
+  --ak-tracking-wide: 0.06em;
+
+  // Prose and rhythm (D-043).
+  // Comfortable reading measure for body text (45–75 characters).
+  --ak-measure: 65ch;
+
+  // Space between consecutive children of an ak-flow block. `em`, so it is
+  // resolved on each child and scales with the text it separates.
+  --ak-flow-space: 1em;
+
+  // Block padding of an ak-section: one token sets the space between every
+  // section on a page.
+  --ak-section-space: clamp(4rem, 2.5rem + 6vw, 7.5rem); // 64 → 120px
+
+  // Full-viewport block size, used by ak-h-screen / ak-min-h-screen (D-040).
+  // Dynamic by default: tracks mobile browser chrome showing and hiding, which
+  // is what "100vh" is usually meant to do. Override with 100svb for stable
+  // sizing that never reflows mid-scroll.
+  --ak-viewport-block: 100dvb;
+
+  // Layout knobs (D-041). These were previously fallback-only values buried in
+  // _base.scss, which made them invisible in devtools and undiscoverable
+  // without reading the source. Declaring them here is what makes them API.
+
+  // Default gutter between ak-row columns. Non-zero so a row looks like a
+  // layout out of the box; set to 0 (or use ak-gap-0) for a flush grid.
+  --ak-row-gap: var(--ak-space-md);
+
+  // ak-page wrapper. Set --ak-page-max to `none` for a full-width page that
+  // keeps its gutters — the fluid case, without a second class (D-040).
+  --ak-page-max: 75rem;
+  --ak-page-gutter: var(--ak-space-md);
+}

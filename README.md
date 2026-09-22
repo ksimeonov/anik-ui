@@ -1,93 +1,342 @@
-# UI
+# AniK UI
 
+A tiny, framework-agnostic CSS layout and utility system: a 12-column CSS Grid
+`row`, viewport- and container-query responsive columns, spacing, flexbox,
+alignment, typography, sizing and positioning utilities.
 
+- **CSS-first.** No JavaScript runtime in the package.
+- **Framework agnostic.** Angular, React, Vue, Svelte, plain HTML.
+- **Bounded API.** Exactly 416 generated classes, enumerated and asserted by
+  the test suite (`npm test`).
+- **No unexpected global styles.** The reset is opt-in and never auto-enabled.
 
-## Getting started
+> **Status: `0.x`.** The full class API in
+> [`mvp-plan/15-class-api-matrix.md`](mvp-plan/15-class-api-matrix.md) is implemented and
+> tested. While in `0.x`, class names may still move; the first stable API is `1.0.0`.
+>
+> **[Live playground](https://ksimeonov.github.io/anik-ui/)** — every utility on one
+> page, rebuilt from `main` on each release.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## Install
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-* [Create](https://docs.gitlab.com/user/project/repository/web_editor/#create-a-file) or [upload](https://docs.gitlab.com/user/project/repository/web_editor/#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
-
+```bash
+npm install anik-ui
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/kristian90s/ui.git
-git branch -M main
-git push -uf origin main
+
+## Import
+
+Four entry points are published:
+
+| Import              | What it is                   |
+| ------------------- | ---------------------------- |
+| `anik-ui/css`       | utilities + layout, expanded |
+| `anik-ui/css/min`   | utilities + layout, minified |
+| `anik-ui/reset`     | optional reset, expanded     |
+| `anik-ui/reset/min` | optional reset, minified     |
+
+Sass source is also shipped. `@use` has to come before any other rule in a file, so
+load the utilities **last** with `meta.load-css` to keep the required import order:
+
+```scss
+@use 'sass:meta';
+@use 'anik-ui/scss/reset'; // optional reset, first
+
+// …your component styles…
+
+@include meta.load-css('anik-ui'); // utilities + layout, last
 ```
 
-## Integrate with your tools
+Separate files listed in order work too — for example Angular's `styles` array:
+a file with `@use 'anik-ui/scss/reset'`, then your styles, then a file with
+`@use 'anik-ui'`. Do **not** put `@use 'anik-ui'` at the top of the file that holds
+your component styles: the utilities are then emitted first and lose every tie.
 
-* [Set up project integrations](https://gitlab.com/kristian90s/ui/-/settings/integrations)
+How the specifier resolves depends on the toolchain:
 
-## Collaborate with your team
+| Toolchain                                      | Write                                   |
+| ---------------------------------------------- | --------------------------------------- |
+| Vite, Angular (read the package `exports` map) | `anik-ui`, `anik-ui/scss/reset`         |
+| Dart Sass CLI or JS API with the Node importer | `pkg:anik-ui`, `pkg:anik-ui/scss/reset` |
 
-* [Invite team members and collaborators](https://docs.gitlab.com/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/user/project/merge_requests/creating_merge_requests/)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/user/project/issues/managing_issues/#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+For the CLI that means `sass --pkg-importer=node`. Paths into `anik-ui/src/…` are not
+part of the public API, and Vite rejects them because they are not exported.
 
-## Test and Deploy
+Plain HTML:
 
-Use the built-in continuous integration in GitLab.
+```html
+<link rel="stylesheet" href="node_modules/anik-ui/dist/anik-ui.min.css" />
+```
 
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/topics/autodevops/requirements/)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ci/environments/protected_environments/)
+### Required import order
 
-***
+This order is a hard requirement, not a suggestion:
 
-# Editing this README
+```text
+1. anik-ui reset            (optional)
+2. your framework / component styles
+3. anik-ui utilities
+```
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+Utilities are emitted **unlayered** and every utility is a single class selector
+`(0,1,0)`. They beat component CSS **only** because they come later in source
+order. Import them before your component CSS and your component CSS wins ties.
+There is no `!important` anywhere outside the reset's `prefers-reduced-motion`
+block.
 
-## Suggestions for a good README
+The optional reset is wrapped in `@layer ak.reset`, so any consumer rule beats it
+without a specificity fight.
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+## Browser support
 
-## Name
-Choose a self-explaining name for your project.
+| Browser             | Minimum |
+| ------------------- | ------- |
+| Chrome / Edge       | 111     |
+| Firefox             | 113     |
+| Safari / iOS Safari | 16.4    |
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+Roughly March–May 2023. The floor is set by container queries. No autoprefixer,
+no PostCSS, no `browserslist` — every property used is unprefixed at that floor.
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+### Graceful degradation
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+Below the floor, `@container` blocks are ignored by the parser. Because the
+system is mobile-first, an unsupported browser keeps the **default (smallest)
+layout** rather than breaking; viewport `@media` variants still apply. This is
+intended behaviour — there is no JavaScript polyfill.
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+## Layout
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+Three structural classes. Everything else in the library is a utility.
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+| Class     | What it does                                                   |
+| --------- | -------------------------------------------------------------- |
+| `ak-page` | Centred page wrapper: capped width, auto margins, side gutters |
+| `ak-row`  | The 12-column grid. Children are placed with `ak-col-*`        |
+| `ak-cq`   | Establishes a query container, enabling the `-c-*` variants    |
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+```html
+<div class="ak-page">
+  <div class="ak-row">
+    <main class="ak-col-12 ak-col-md-8">…</main>
+    <aside class="ak-col-12 ak-col-md-4">…</aside>
+  </div>
+</div>
+```
+
+The wrapper is called `ak-page`, **not** `ak-container` — in this library
+"container" always means a _query_ container (`ak-cq`), and overlapping the two
+meanings would be a lasting source of confusion.
+
+### Layout tokens
+
+These three custom properties are the layout API. Override them anywhere — on
+`:root`, on a section, or on a single element.
+
+| Token              | Default              | Controls                        |
+| ------------------ | -------------------- | ------------------------------- |
+| `--ak-row-gap`     | `var(--ak-space-md)` | gutter between `ak-row` columns |
+| `--ak-page-max`    | `75rem`              | `ak-page` maximum width         |
+| `--ak-page-gutter` | `var(--ak-space-md)` | `ak-page` inline padding        |
+
+**Full-width ("fluid") page.** There is no `ak-page-fluid` class; unset the cap:
+
+```css
+.hero {
+  --ak-page-max: none; /* full width, gutters kept */
+}
+```
+
+```html
+<div class="ak-page hero">…</div>
+```
+
+**Wider or narrower pages.** Same mechanism:
+
+```css
+.marketing {
+  --ak-page-max: 90rem;
+}
+```
+
+**Flush grid.** `ak-row` is spaced by default. For an edge-to-edge grid use
+`ak-gap-0`, or set `--ak-row-gap: 0`.
+
+## Responsive spacing escape hatch
+
+Spacing utilities have no breakpoint variants by design. When spacing needs to
+change across breakpoints, drive the token from your own stylesheet:
+
+```css
+.card-grid {
+  --ak-row-gap: var(--ak-space-sm);
+}
+
+@media (min-width: 768px) {
+  .card-grid {
+    --ak-row-gap: var(--ak-space-xl);
+  }
+}
+```
+
+```html
+<div class="ak-row card-grid">…</div>
+```
+
+Mind the width a large gap costs: a 12-track row always has 11 gaps, even when every
+child spans all 12 columns. At `--ak-space-3xl` (64px) the row needs 704px before any
+content and overflows a phone screen, so keep wide gaps behind a breakpoint like the
+one above.
+
+## Sizing
+
+Ten utilities, no breakpoint variants. The class names keep the familiar `w` / `h`
+spelling; the declarations use logical properties, so they are writing-mode
+correct like the rest of the library.
+
+| Class             | Declaration                                |
+| ----------------- | ------------------------------------------ |
+| `ak-w-full`       | `inline-size: 100%`                        |
+| `ak-w-auto`       | `inline-size: auto`                        |
+| `ak-w-fit`        | `inline-size: fit-content`                 |
+| `ak-max-w-full`   | `max-inline-size: 100%`                    |
+| `ak-min-w-0`      | `min-inline-size: 0`                       |
+| `ak-h-full`       | `block-size: 100%`                         |
+| `ak-h-auto`       | `block-size: auto`                         |
+| `ak-h-screen`     | `block-size: var(--ak-viewport-block)`     |
+| `ak-min-h-screen` | `min-block-size: var(--ak-viewport-block)` |
+| `ak-min-h-0`      | `min-block-size: 0`                        |
+
+### Full-viewport sections — reach for `ak-min-h-screen`
+
+`ak-h-screen` sets a fixed height, so content taller than the viewport is
+**clipped**. For a hero or a full-page section, `ak-min-h-screen` is almost
+always what you want:
+
+```html
+<section class="ak-min-h-screen ak-flex ak-items-center ak-justify-center">
+  …
+</section>
+```
+
+Both read `--ak-viewport-block`, which defaults to `100dvb` — the _dynamic_
+viewport, so it tracks mobile browser chrome showing and hiding. If you would
+rather have a size that never reflows mid-scroll, override it once:
+
+```css
+:root {
+  --ak-viewport-block: 100svb; /* small viewport: stable, never reflows */
+}
+```
+
+### `ak-min-w-0` — the flex overflow fix
+
+`ak-row` already sets `min-width: 0` on its children, so long unbroken content
+cannot blow out a grid track. Flex containers deliberately do **not** get this
+automatically, because it would change flex sizing for every consumer. Apply it
+yourself when a flex child holds text, a `<pre>`, or a table that might not wrap:
+
+```html
+<div class="ak-flex ak-gap-md">
+  <aside class="ak-flex-none">Sidebar</aside>
+  <main class="ak-flex-1 ak-min-w-0">…long unbroken content…</main>
+</div>
+```
+
+`ak-w-screen` is deliberately **not** provided: `100vw` includes the scrollbar
+width and causes horizontal overflow.
+
+## Display type and prose
+
+Four fluid display sizes extend the `ak-text-*` scale. Each is a `clamp()` token that
+grows with the viewport between a floor and a ceiling, with a paired, tighter
+line-height — no breakpoint classes needed.
+
+| Class         | Size (narrow → wide) |
+| ------------- | -------------------- |
+| `ak-text-3xl` | 36 → 40px            |
+| `ak-text-4xl` | 40 → 48px            |
+| `ak-text-5xl` | 44 → 60px            |
+| `ak-text-6xl` | 48 → 72px            |
+
+`ak-tracking-tight` / `-normal` / `-wide` set letter-spacing (tighten display type,
+loosen small caps and labels).
+
+Three prose and rhythm classes:
+
+| Class        | What it does                                       | Token                 |
+| ------------ | -------------------------------------------------- | --------------------- |
+| `ak-measure` | Caps line length for readable text                 | `--ak-measure` (65ch) |
+| `ak-flow`    | Even vertical space between direct children        | `--ak-flow-space`     |
+| `ak-section` | Fluid block padding for page sections (64 → 120px) | `--ak-section-space`  |
+
+```html
+<section class="ak-section">
+  <div class="ak-page">
+    <h1 class="ak-text-5xl ak-tracking-tight">Title</h1>
+    <div class="ak-flow ak-measure">
+      <p>…</p>
+      <p>…</p>
+    </div>
+  </div>
+</section>
+```
+
+`--ak-flow-space` defaults to `1em`, resolved on each child, so the gap scales with the
+text it follows. Spacing utilities override both rhythm classes: `ak-pt-0` on the first
+section, or `ak-mt-xl` on a single `ak-flow` child.
+
+## `ak-cq` side effects
+
+`ak-cq` sets `container-type: inline-size`. Per the CSS specification, that applies
+style and inline-size containment and makes the element an independent formatting
+context. Three consequences are worth knowing:
+
+- **It cannot shrink to fit its content.** With inline-size containment the element's
+  width ignores its children. On an `ak-inline-block`, a float, or a flex item sized by
+  its content, `ak-cq` collapses the element to the width of its padding. Put `ak-cq`
+  on an element whose width comes from its parent — a block, a column, a flex item
+  with `ak-flex-1`.
+- **Child margins stay inside it.** The new formatting context stops the first and
+  last child's block margins collapsing through the container. Because the reset keeps
+  the UA's block-end margins, the space under the last paragraph of an `ak-cq` box
+  stays inside that box. Use `ak-flow` on the box, or `ak-mb-0` on the last child, when
+  that matters.
+- **Nested `ak-cq` elements shadow each other.** `-c-*` variants always query the
+  nearest `ak-cq` ancestor; there is no way to query one further out.
+
+**Positioned descendants depend on the browser version — keep `ak-fixed` outside
+`ak-cq`.** The original container-query specification also applied layout containment,
+which makes the container the containing block for fixed- **and** absolute-positioned
+descendants. Browsers at the support floor still do this; current ones follow the
+revised specification and do not:
+
+| `ak-cq` with a positioned descendant | Chrome 111, Firefox 113, Safari 16.4 | Current Chrome, Firefox, Safari         |
+| ------------------------------------ | ------------------------------------ | --------------------------------------- |
+| `ak-fixed`                           | pinned to the `ak-cq` box            | pinned to the viewport                  |
+| `ak-absolute`                        | positioned against the `ak-cq` box   | against the nearest positioned ancestor |
+
+Measured with Playwright builds (Safari via its WebKit engine builds, 16.4 and
+26.5). The exact versions where each browser switched have not been pinned down.
+
+To behave the same everywhere, put `ak-fixed` elements (overlays, modals, toasts)
+outside every `ak-cq`, and put `ak-relative` on the element an `ak-absolute` child
+should anchor to, inside the `ak-cq`. The playground's containment page is a live
+test for any browser.
+
+## Class reference
+
+The full generated class list lives in
+[`api/classes.txt`](api/classes.txt), regenerated from the built CSS and
+asserted by `npm test`. The authoritative contract for what is generated is
+[`mvp-plan/15-class-api-matrix.md`](mvp-plan/15-class-api-matrix.md).
 
 ## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+See [CONTRIBUTING.md](CONTRIBUTING.md). Commits follow
+[Conventional Commits](https://www.conventionalcommits.org/); because PRs into
+`dev` are squash-merged, the **PR title** is the released commit message and is
+the enforced gate.
 
 ## License
-For open source projects, say how it is licensed.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+[MIT](LICENSE) © Kristian Simeonov

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ak-fixed inside ak-cq</title>
+    <!-- Its own document so a position: fixed badge that escapes to the viewport
+         pins to this frame instead of covering the playground. -->
+    <link rel="stylesheet" href="../dist/anik-reset.css" />
+    <link rel="stylesheet" href="../dist/anik-ui.css" />
+    <style>
+      body {
+        font:
+          14px/1.5 system-ui,
+          sans-serif;
+        color-scheme: light dark;
+      }
+      .box {
+        block-size: 9rem;
+        border: 2px dashed currentColor;
+        padding: 0.5rem;
+      }
+      .badge {
+        white-space: nowrap;
+        padding: 0.125rem 0.5rem;
+        border-radius: 999px;
+        color: white;
+        font-size: 12px;
+      }
+      .a {
+        background: #6b7280;
+      }
+      .b {
+        background: #4f7cff;
+      }
+      .c {
+        background: #d9480f;
+      }
+    </style>
+  </head>
+  <body class="ak-p-md">
+    <!-- Reference: outside any ak-cq, pinned to the frame's viewport. -->
+    <span class="badge a ak-fixed ak-bottom-0 ak-start-0 ak-m-sm"
+      >① outside ak-cq</span
+    >
+
+    <p class="ak-measure ak-mt-2xl">
+      Scroll this frame. Badge ① is <code>ak-fixed</code> with no
+      <code>ak-cq</code> ancestor and stays on the frame's viewport. Watch where
+      ② and ③ go.
+    </p>
+    <div class="ak-block" style="block-size: 12rem"></div>
+
+    <div class="ak-row">
+      <div class="ak-col-12 ak-col-sm-6">
+        <div class="ak-cq box">
+          <strong>ak-cq</strong>
+          <span class="badge b ak-fixed ak-top-0 ak-end-0 ak-m-sm"
+            >② ak-fixed in ak-cq</span
+          >
+          <p class="ak-mt-sm">
+            If ② sits in this box's corner and scrolls with it, the containment
+            caveat applies in this browser. If ② stays at the top of the frame,
+            it does not.
+          </p>
+        </div>
+      </div>
+      <div class="ak-col-12 ak-col-sm-6">
+        <div class="box" style="contain: layout">
+          <strong>contain: layout</strong> (control)
+          <span class="badge c ak-fixed ak-top-0 ak-end-0 ak-m-sm"
+            >③ in contain: layout</span
+          >
+          <p class="ak-mt-sm">
+            Layout containment always captures fixed descendants, so ③ always
+            sits in this box.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="ak-block" style="block-size: 40rem"></div>
+  </body>
+</html>

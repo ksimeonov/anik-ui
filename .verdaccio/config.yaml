@@ -1,0 +1,42 @@
+# Local-only npm registry for AniK UI consumer testing.
+# Never used in CI or production. See mvp-plan/09-local-development.md.
+#
+#   npm run local:registry     # start it (foreground, keep the terminal open)
+#   npm run local:publish      # build + publish a throwaway version here
+#
+# Everything that is not anik-ui is proxied transparently to npmjs, so a
+# consumer project can point its whole registry here without losing access
+# to its other dependencies.
+
+storage: ./storage
+
+auth:
+  htpasswd:
+    file: ./htpasswd
+    # No signup. anik-ui is published anonymously (see the package rule below).
+    max_users: -1
+
+uplinks:
+  npmjs:
+    url: https://registry.npmjs.org/
+
+packages:
+  'anik-ui':
+    access: $all
+    publish: $anonymous
+    unpublish: $anonymous
+
+  '@*/*':
+    access: $all
+    publish: $authenticated
+    proxy: npmjs
+
+  '**':
+    access: $all
+    publish: $authenticated
+    proxy: npmjs
+
+web:
+  title: AniK UI local registry
+
+log: { type: stdout, format: pretty, level: warn }

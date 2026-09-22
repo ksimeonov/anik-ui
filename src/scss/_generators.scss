@@ -1,0 +1,59 @@
+// Shared class generators, used both for the default (unprefixed) utilities and
+// inside the @media / @container variant blocks. Keeping them here is what makes
+// a viewport variant and its container counterpart provably identical apart from
+// the at-rule wrapper.
+
+@use 'config';
+
+// Columns — span-based only (spec 04). `$infix` is '' | 'md-' | 'c-md-'.
+@mixin columns($infix: '') {
+  @for $n from 1 through config.$columns {
+    .ak-col-#{$infix}#{$n} {
+      grid-column: span #{$n} / span #{$n};
+    }
+  }
+
+  .ak-col-#{$infix}auto {
+    grid-column: auto;
+  }
+}
+
+// Flex direction (D-021). `$infix` is '' | 'md-' | 'c-md-'.
+@mixin directions($infix: '') {
+  .ak-dir-#{$infix}row {
+    flex-direction: row;
+  }
+
+  .ak-dir-#{$infix}column {
+    flex-direction: column;
+  }
+}
+
+// Display / visibility family (spec 06). One family serves layout display and
+// responsive visibility. `$suffix` is '' | '-md' | '-c-md'. `ak-grid` is
+// deliberately not generated — `ak-row` is the grid primitive (D-003).
+@mixin display-family($suffix: '') {
+  .ak-hidden#{$suffix} {
+    display: none;
+  }
+
+  .ak-block#{$suffix} {
+    display: block;
+  }
+
+  .ak-inline#{$suffix} {
+    display: inline;
+  }
+
+  .ak-inline-block#{$suffix} {
+    display: inline-block;
+  }
+
+  .ak-flex#{$suffix} {
+    display: flex;
+  }
+
+  .ak-inline-flex#{$suffix} {
+    display: inline-flex;
+  }
+}

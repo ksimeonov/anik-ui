@@ -1,0 +1,103 @@
+/*!
+ * AniK UI reset — optional, explicitly imported.
+ * Layered (@layer ak.reset) so any consumer rule wins without a specificity fight.
+ * Spec: mvp-plan/07-reset-and-global-css.md
+ */
+
+@layer ak.reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    tab-size: 4;
+  }
+
+  body {
+    margin: 0;
+    min-block-size: 100svb;
+    line-height: 1.5;
+  }
+
+  // Block-START margin only (D-042). Zeroing the bottom margin too left every
+  // consumer re-adding vertical rhythm by hand on day one. Killing the top
+  // margin is what actually earns its place here: it stops the first child of a
+  // box collapsing its margin out through the parent. The block-end margin is
+  // the UA's and is left alone, so headings and paragraphs still space
+  // themselves. `margin-inline: 0` removes the UA's odd 40px indents on
+  // `figure` and `dd`, which are not rhythm and are almost never wanted.
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  figure,
+  blockquote,
+  dl,
+  dd {
+    margin-block-start: 0;
+    margin-inline: 0;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p {
+    overflow-wrap: break-word;
+  }
+
+  ul[role='list'],
+  ol[role='list'] {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-inline-size: 100%;
+  }
+
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+
+  textarea:not([rows]) {
+    min-block-size: 6em;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  :target {
+    scroll-margin-block: 5ex;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

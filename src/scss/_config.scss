@@ -1,0 +1,56 @@
+// Generation config — Sass maps only, no CSS output.
+// The public contract these feed is mvp-plan/15-class-api-matrix.md (416 classes).
+
+// Viewport breakpoints (D-004). Mobile-first: variants apply at min-width.
+$breakpoints: (
+  'sm': 576px,
+  'md': 768px,
+  'lg': 992px,
+  'xl': 1200px
+);
+
+// Container-query thresholds (D-023) — their own scale, not the viewport values.
+// Emitted as `c-<name>` in class names, e.g. ak-col-c-md-6.
+$container-breakpoints: (
+  'sm': 320px,
+  'md': 480px,
+  'lg': 640px,
+  'xl': 800px
+);
+
+// Semantic spacing scale (D-019). Values live in _tokens.scss as custom
+// properties; utilities only ever reference `var(--ak-space-<step>)`.
+$space-steps: '0' '2xs' 'xs' 'sm' 'md' 'lg' 'xl' '2xl' '3xl';
+
+// Grid is always 12 columns (D-003). Only span-based columns exist in MVP.
+$columns: 12;
+
+// Typography sizes with paired line-heights (D-031). 3xl–6xl are the fluid
+// display steps (D-043); their clamp() values live in _tokens.scss.
+$text-sizes: 'xs' 'sm' 'md' 'lg' 'xl' '2xl' '3xl' '4xl' '5xl' '6xl';
+
+// Letter-spacing steps (D-043). Values live in _tokens.scss.
+$tracking-steps: 'tight' 'normal' 'wide';
+
+// Sizing utilities (D-039), as class-name -> `property value` (a two-item
+// space-separated list, read with list.nth).
+// Familiar w/h spelling with logical properties underneath — the same precedent
+// as ak-pt-* -> padding-block-start (D-020). A logical spelling is unavailable
+// anyway: ak-inline / ak-inline-block / ak-inline-flex are display classes with
+// breakpoint variants, so any ak-inline-* sizing token would collide.
+// _utilities.scss and _box-sizing.scss both generate from this one map, so the
+// border-box selector list cannot drift from the family (D-025).
+// ak-w-screen is deliberately absent: 100dvi includes the scrollbar and causes
+// horizontal overflow. See mvp-plan/14-future-roadmap.md.
+$sizing: (
+  'w-full': inline-size 100%,
+  'w-auto': inline-size auto,
+  'w-fit': inline-size fit-content,
+  'max-w-full': max-inline-size 100%,
+  'min-w-0': min-inline-size 0,
+  'h-full': block-size 100%,
+  'h-auto': block-size auto,
+  'h-screen': block-size var(--ak-viewport-block),
+  'min-h-screen': min-block-size var(--ak-viewport-block),
+  'min-h-0': min-block-size 0
+);
