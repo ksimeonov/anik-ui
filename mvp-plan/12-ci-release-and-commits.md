@@ -107,7 +107,7 @@ Publishing only happens after every validation step succeeds.
 
 ### Workflow configuration
 
-- **Node**: current LTS, pinned in both `engines` and the workflow.
+- **Node**: current LTS, pinned once in `.nvmrc` (`node-version-file`); the repo's allowed range is `devEngines.runtime` (D-047).
 - **Concurrency**: a `concurrency` group keyed on `main`, so two quick merges cannot
   race two releases.
 - **Permissions**: `contents: write`, `id-token: write`, `issues: write`,

@@ -434,6 +434,26 @@ nesting, plus a note that positioned descendants are unaffected in current engin
 support-floor versions (D-027) are unverified; `playground/containment.html` is the
 live test, and the README tells consumers what to do if a floor browser does capture.
 
+### D-047 — No `engines` field; source maps for every built stylesheet
+**`engines` removed.** It applied to every consumer: npm warns (`EBADENGINE`) on a
+Node outside the range and fails the install under `engine-strict`. A CSS-only package
+has no runtime Node requirement to state. The Node range the *repository* needs — set
+by the release tooling, `^22.22.2 || >=24.15.0` — moves to `devEngines.runtime`
+(`onFail: error`), which npm enforces only when working in this repo: verified with
+npm 10.9.8 that a dependency declaring an unsatisfiable `devEngines` installs silently,
+while one declaring the same `engines` warns, and errors under `--engine-strict`. CI
+reads the pinned LTS from `.nvmrc` through `node-version-file`, one place instead of
+three workflow files. Supersedes the "`engines` set to the Node LTS used in CI" line of
+spec 08 and the Node bullet of spec 12.
+
+**Minified source maps restored.** D-036 promises maps for both entrypoints, but the
+switch to lightningcss dropped them for the `.min.css` files. `build:min` now passes
+`--sourcemap` and runs from `dist/`, because lightningcss writes the map URL and
+sources relative to its working directory. Each minified map points at the expanded
+CSS, which maps on to the Sass. `test/source-maps.test.mjs` asserts every stylesheet's
+map and its sources resolve, so this cannot regress silently again. Cost: two files
+and about 5.6 kB compressed in the tarball.
+
 ## Unresolved
 
 - [ ] **Reserve the npm name** — availability confirmed (D-018, 2026-09-07: `anik-ui`

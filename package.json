@@ -53,7 +53,7 @@
   "scripts": {
     "build": "npm run build:expanded && npm run build:min",
     "build:expanded": "sass --style=expanded --source-map --load-path=src/scss src/scss/index.scss:dist/anik-ui.css src/scss/reset.scss:dist/anik-reset.css",
-    "build:min": "lightningcss --minify --targets 'chrome 111, firefox 113, safari 16.4' dist/anik-ui.css -o dist/anik-ui.min.css && lightningcss --minify --targets 'chrome 111, firefox 113, safari 16.4' dist/anik-reset.css -o dist/anik-reset.min.css",
+    "build:min": "cd dist && lightningcss --minify --sourcemap --targets 'chrome 111, firefox 113, safari 16.4' anik-ui.css -o anik-ui.min.css && lightningcss --minify --sourcemap --targets 'chrome 111, firefox 113, safari 16.4' anik-reset.css -o anik-reset.min.css",
     "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
     "lint": "stylelint \"src/**/*.scss\"",
     "lint:fix": "stylelint --fix \"src/**/*.scss\"",
@@ -80,7 +80,11 @@
     "stylelint": "^16.12.0",
     "stylelint-config-standard-scss": "^14.0.0"
   },
-  "engines": {
-    "node": ">=22.12.0"
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "^22.22.2 || >=24.15.0",
+      "onFail": "error"
+    }
   }
 }
