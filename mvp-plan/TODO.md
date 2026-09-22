@@ -135,23 +135,22 @@ Acceptance gates, not activities. Each has a pass condition.
       queries; `reset-on.html` / `reset-off.html` and `containment.html` in iframes.
       Uses 128 of the 416 classes, all checked against `api/classes.txt`
 - [~] Playground verified against the browser checklist — automated pass
-      2026-09-22 in current engines only (Playwright: Chromium 151, WebKit / Safari
-      26.5, Firefox 153) at 375 / 800 / 1280px: no horizontal overflow, no console
-      errors, visibility ranges, `ak-min-w-0` pair. Still needs a human pass and
-      the floor versions
-- [~] Responsive checks — current Chrome, Firefox, Safari engines pass (above);
-      iOS Safari and the D-027 floor versions not yet checked
+      2026-09-22 at 375 / 800 / 1280px in current engines (Chromium 151, WebKit 26.5,
+      Firefox 153) **and at the floor** (Chromium 111, Firefox 113, WebKit 16.4): no
+      horizontal overflow, no errors, visibility ranges, `ak-min-w-0` pair. Still
+      needs a human pass, incl. real Safari 16.4 and iOS Safari
+- [~] Responsive checks — current and floor Chrome / Firefox / WebKit pass (above);
+      real iOS Safari not yet checked
 - [~] Container-query checks, including `ak-cq` + `ak-row` on the same element —
-      current engines pass: 1 → 2 (c-md) → 4 (c-lg) per line, container variant
-      beats viewport variant, same card stacks/unstacks by container. Floor
-      versions not yet checked
-- [~] Containment caveat verified: `ak-fixed` inside `ak-cq` behaves as documented
-      — the old caveat did **not** reproduce in Chromium 151, WebKit 26.5 or Firefox
-      153, and the current spec applies no layout containment. README and specs 02 /
-      06 / 11 / 13 reworded as "`ak-cq` side effects" (D-046). Still to do: run
-      `playground/containment.html` at the D-027 floor versions and adjust the README
-      note if one of them captures
-- [ ] Degradation check: below-floor browser keeps the default layout, does not break
+      current and floor engines pass: 1 → 2 (c-md) → 4 (c-lg) per line, container
+      variant beats viewport variant, same card stacks/unstacks by container
+- [x] Containment caveat verified (D-048) — version-dependent: at the floor (Chromium
+      111, Firefox 113, WebKit 16.4) `ak-cq` captures `ak-fixed` and `ak-absolute`
+      descendants; current engines do not. README documents both plus the portable
+      rule (keep `ak-fixed` outside `ak-cq`)
+- [x] Degradation check — Chromium 104 and Firefox 102 (no container queries):
+      `@container` ignored, container layouts stay single-column, viewport variants
+      apply, no overflow or errors (D-048)
 - [x] Install the packaged artifact into consumer projects — 2026-09-22 via Verdaccio
       (`anik-ui@0.0.0-local.*`). `local:publish` was broken on npm ≥ 10 (prerelease
       needs an explicit `--tag`); fixed. All `exports` subpaths resolve through Node
@@ -245,9 +244,10 @@ repo; **Maintainer** steps need npm / GitHub / GitLab access or a human eye.
 2. **Agent — `engines` scoping** — **done 2026-09-22** (D-047). `engines` removed;
    `devEngines.runtime` (`^22.22.2 || >=24.15.0`) guards the repo, `.nvmrc` pins
    CI. Source maps for the minified builds fixed in the same change.
-3. **Agent — floor and degradation browsers.** Old Playwright builds for Chromium 111
-   and Firefox 113 (containment test, playground) and a pre-container-query Chromium
-   (degradation check). Safari 16.4 cannot be reproduced this way.
+3. **Agent — floor and degradation browsers** — **done 2026-09-22** (D-048). Floor:
+   Chromium 111, Firefox 113, WebKit 16.4 via Playwright 1.31 / 1.34; below floor:
+   Chromium 104, Firefox 102 via 1.24. Found the containment caveat is real at the
+   floor. Real Safari 16.4 / iOS Safari stay a maintainer check.
 4. **Agent — docs and hygiene PR:** the 11-gaps minimum-width note in the README;
    stale D-024 count (406 → 416) and README "being implemented" status; playground
    deployed to GitHub Pages from the release workflow, plus the README link; a test

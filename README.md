@@ -296,13 +296,24 @@ context. Three consequences are worth knowing:
 - **Nested `ak-cq` elements shadow each other.** `-c-*` variants always query the
   nearest `ak-cq` ancestor; there is no way to query one further out.
 
-**`ak-fixed` and `ak-absolute` are not affected.** Early container-query drafts also
-applied layout containment, which made the container the containing block for
-fixed- and absolute-positioned descendants. The current specification does not, and
-current Chrome, Safari and Firefox position an `ak-fixed` element inside `ak-cq`
-against the viewport. Browsers at the support floor have not been verified yet; the
-playground's containment page is a live test for any browser. If a fixed element is
-pinned to its container there, move it outside the `ak-cq`.
+**Positioned descendants depend on the browser version — keep `ak-fixed` outside
+`ak-cq`.** The original container-query specification also applied layout containment,
+which makes the container the containing block for fixed- **and** absolute-positioned
+descendants. Browsers at the support floor still do this; current ones follow the
+revised specification and do not:
+
+| `ak-cq` with a positioned descendant | Chrome 111, Firefox 113, Safari 16.4 | Current Chrome, Firefox, Safari         |
+| ------------------------------------ | ------------------------------------ | --------------------------------------- |
+| `ak-fixed`                           | pinned to the `ak-cq` box            | pinned to the viewport                  |
+| `ak-absolute`                        | positioned against the `ak-cq` box   | against the nearest positioned ancestor |
+
+Measured with Playwright builds (Safari via its WebKit engine builds, 16.4 and
+26.5). The exact versions where each browser switched have not been pinned down.
+
+To behave the same everywhere, put `ak-fixed` elements (overlays, modals, toasts)
+outside every `ak-cq`, and put `ak-relative` on the element an `ak-absolute` child
+should anchor to, inside the `ak-cq`. The playground's containment page is a live
+test for any browser.
 
 ## Class reference
 

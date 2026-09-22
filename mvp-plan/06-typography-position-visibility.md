@@ -112,10 +112,10 @@ Logical offsets, consistent with spacing and text alignment.
 
 ### Two documented interactions
 
-- **`ak-fixed` inside `ak-cq` is positioned against the viewport, as usual.** An
-  earlier version of this spec said the reverse; the current CSS specification applies
-  no layout containment to query containers (D-046). Floor versions are still to be
-  verified. See [`02-responsive-system.md`](02-responsive-system.md).
+- **`ak-fixed` / `ak-absolute` inside `ak-cq` depend on the browser version.** At the
+  support floor the `ak-cq` box captures them (layout containment, original spec);
+  current browsers do not (D-048). Keep `ak-fixed` outside `ak-cq`. See
+  [`02-responsive-system.md`](02-responsive-system.md).
 - **No z-index utilities in MVP.** Stacking is application policy, and a shared
   z-index scale that does not match the consuming app is worse than none. Consumers set
   `z-index` in their own CSS. Listed in [`14-future-roadmap.md`](14-future-roadmap.md).

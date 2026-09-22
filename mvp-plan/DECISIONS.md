@@ -416,6 +416,9 @@ descendant of main" true. `HUSKY=0` in the job keeps the local hooks from runnin
 bot's commits.
 
 ### D-046 — `ak-cq` applies no layout containment; the `ak-fixed` caveat is withdrawn
+> **Amended by D-048.** True of current browsers only; the support-floor versions still
+> apply layout containment, so the caveat is restored as a version-dependent one.
+
 Spec 02 and the README said `container-type: inline-size` applies layout containment,
 so `ak-fixed` / `ak-absolute` inside `ak-cq` would be positioned against the container.
 That followed early container-query drafts. The current specification (CSS Conditional
@@ -453,6 +456,33 @@ sources relative to its working directory. Each minified map points at the expan
 CSS, which maps on to the Sass. `test/source-maps.test.mjs` asserts every stylesheet's
 map and its sources resolve, so this cannot regress silently again. Cost: two files
 and about 5.6 kB compressed in the tarball.
+
+### D-048 — Positioned descendants of `ak-cq` are version-dependent; keep `ak-fixed` out
+Amends D-046. Run at the support floor (D-027) with old Playwright builds — Chromium
+111.0.5563, Firefox 113.0 and WebKit 16.4 — `container-type: inline-size` still applies
+layout containment: an `ak-fixed` **and** an `ak-absolute` descendant are both
+positioned against the `ak-cq` box, matching the original container-query
+specification. Chromium 151, Firefox 153 and WebKit 26.5 follow the revised
+specification and do not. A `contain: layout` control captured in every version, so
+the measurements are sound. Shrink-to-fit collapse and child margins kept inside the
+container behave the same in both generations.
+
+The earlier absolute-position measurement in D-046 used a probe whose container margin
+collapsed through its positioned parent, which made both outcomes look identical; it
+was repeated with the collapse prevented, and the current-browser result held.
+
+Decision: document the difference instead of picking a side, and give the portable
+rule — keep `ak-fixed` outside every `ak-cq`; anchor `ak-absolute` children to an
+`ak-relative` element inside the `ak-cq`. The versions in which each engine switched
+are not pinned down; that would need a bisection across builds and does not change the
+advice.
+
+Same run, other Phase 3 gates: the whole playground behaves identically at the floor
+and in current engines (overflow, visibility ranges, 1 → 2 → 4 cards, container
+thresholds, container-over-viewport precedence, `ak-min-w-0`). Below the floor —
+Chromium 104 and Firefox 102, before container queries — `@container` blocks are ignored,
+container layouts stay at the default single column, viewport variants still apply,
+and nothing overflows or throws: the documented degradation holds.
 
 ## Unresolved
 
