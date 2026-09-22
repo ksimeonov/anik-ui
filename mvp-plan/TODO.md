@@ -205,23 +205,32 @@ Acceptance gates, not activities. Each has a pass condition.
 - [x] Configure npm trusted publishing (OIDC) — set up by the maintainer 2026-09-22:
       npmjs.com → `anik-ui` → Settings → Trusted
       publisher → GitHub Actions: `ksimeonov` / `anik-ui` / `release.yml` / environment
-      `release`. **Verify the exchange on the first release**; fallback is a granular
-      `NPM_TOKEN` secret in the `release` environment. Then set Publishing access to
-      "Require two-factor authentication and disallow tokens"
+      `release`. OIDC exchange verified by the first release. **Allowed actions must
+      include direct publish** — new publishers can only stage (D-050). Then set
+      Publishing access to "Require two-factor authentication and disallow tokens"
 - [x] Enable provenance — automatic with trusted publishing (`id-token: write`)
-- [~] Deploy playground to GitHub Pages from CI — `pages` job in `release.yml` after
-      the release job; `npm run build:site` assembles `_site/` (verified locally under
-      `/anik-ui/`). Pages enabled (Actions source); the `github-pages` environment
-      deploys from `main` only. First real deploy happens with the first release
-- [ ] Switch the GitHub default branch back to `main` — set to `dev` until the first
-      release, because `main` still holds only GitLab's template README. The `main`
-      ruleset targets `refs/heads/main` by name, so the switch does not move it
-- [ ] Publish first `0.1.0`
-- [ ] Verify fresh consumer can install from npm
+- [x] Deploy playground to GitHub Pages from CI — `pages` job in `release.yml` after
+      the release job; first deployed 2026-09-22, live at
+      <https://ksimeonov.github.io/anik-ui/>. The `github-pages` environment deploys
+      from `main` only
+- [x] Switch the GitHub default branch back to `main` — done 2026-09-22
+- [x] Publish first `0.1.0` — 2026-09-22, after two failed runs: `generateNotes`
+      preset mismatch (#9), then `403 OIDC permission denied` (trusted publisher
+      could only stage). Tag and release commit had already landed, so `0.1.0` was
+      published with the manual `publish-tag` path (#11, D-050). Provenance verified
+      (`release.yml` @ `refs/heads/main`); GitHub release created from the changelog
+- [x] Verify fresh consumer can install from npm — `npm i anik-ui@0.1.0` from the
+      public registry: no engine warnings, `npm audit signatures` verifies the
+      registry signature and the attestation, every `exports` path resolves, and the
+      import-order page renders correctly at 375 / 1024px
 
 ## Current next action
 
-_Synced 2026-09-22 against `dev` @ `9be8b6a`._
+_Synced 2026-09-22 after the `0.1.0` release._
+
+**`anik-ui@0.1.0` is published** (npm, with provenance), tagged, released on GitHub,
+and the playground is live at <https://ksimeonov.github.io/anik-ui/>. `main` is the
+default branch again.
 
 Phases 1 and 2 are committed on `dev`; `main` still holds only the initial commit.
 Verified 2026-09-21: `npm test` (31/31, includes build + API check) · `npm run lint` ·
@@ -262,10 +271,8 @@ repo; **Maintainer** steps need npm / GitHub / GitLab access or a human eye.
    lock Publishing access to 2FA-only; ~~decide the `ak-` prefix~~ (kept, D-049); archive GitLab and `git remote remove gitlab`;
    install `gh` properly (then delete `.git/gh`, re-run `gh auth setup-git`); trademark
    half of D-018 step 4; human playground pass incl. iOS Safari and Safari 16.4.
-6. **First release:** `dev` → `main` PR titled `chore(release): 0.1.0`, merged with a
-   merge commit; verify the OIDC publish (fallback: `NPM_TOKEN` in the `release`
-   environment); switch the default branch back to `main`; install `0.1.0` from npm
-   into a fresh consumer.
+6. **First release** — **done 2026-09-22.** See Phase 4.
 
-Known and accepted: OIDC can only be proven by the first release; squash-only on
-`dev` stays convention unless a `dev` ruleset is wanted.
+Still open after `0.1.0`: the maintainer items in step 5 (2FA-only publishing access,
+GitLab archive, `gh` install, trademark check, human Safari 16.4 / iOS pass).
+Squash-only on `dev` stays convention unless a `dev` ruleset is wanted.
