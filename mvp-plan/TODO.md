@@ -144,12 +144,12 @@ Acceptance gates, not activities. Each has a pass condition.
       current engines pass: 1 → 2 (c-md) → 4 (c-lg) per line, container variant
       beats viewport variant, same card stacks/unstacks by container. Floor
       versions not yet checked
-- [!] Containment caveat verified: `ak-fixed` inside `ak-cq` behaves as documented
-      — **does not reproduce** in Chromium 151, WebKit 26.5 or Firefox 153: the fixed
-      badge stays on the viewport while a `contain: layout` control captures it. The
-      README states the opposite. Untested at the floor versions. Decision needed:
-      reword the README caveat (and spec 02) to match what the floor versions show.
-      `playground/containment.html` is the live test
+- [~] Containment caveat verified: `ak-fixed` inside `ak-cq` behaves as documented
+      — the old caveat did **not** reproduce in Chromium 151, WebKit 26.5 or Firefox
+      153, and the current spec applies no layout containment. README and specs 02 /
+      06 / 11 / 13 reworded as "`ak-cq` side effects" (D-046). Still to do: run
+      `playground/containment.html` at the D-027 floor versions and adjust the README
+      note if one of them captures
 - [ ] Degradation check: below-floor browser keeps the default layout, does not break
 - [ ] Install local tarball into sample consumer project — Verdaccio tooling is ready
       (`npm run local:registry` / `npm run local:publish`, spec 09), not yet exercised

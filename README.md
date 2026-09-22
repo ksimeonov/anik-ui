@@ -257,13 +257,32 @@ Three prose and rhythm classes:
 text it follows. Spacing utilities override both rhythm classes: `ak-pt-0` on the first
 section, or `ak-mt-xl` on a single `ak-flow` child.
 
-## Containment caveat
+## `ak-cq` side effects
 
-`ak-cq` sets `container-type: inline-size`, which establishes layout, style and
-size containment. A position: fixed descendant (`ak-fixed`) inside an `ak-cq`
-element is positioned relative to that container, **not** the viewport. This is a
-CSS containment consequence, not an AniK UI bug. Put `ak-fixed` elements outside
-any `ak-cq` ancestor.
+`ak-cq` sets `container-type: inline-size`. Per the CSS specification, that applies
+style and inline-size containment and makes the element an independent formatting
+context. Three consequences are worth knowing:
+
+- **It cannot shrink to fit its content.** With inline-size containment the element's
+  width ignores its children. On an `ak-inline-block`, a float, or a flex item sized by
+  its content, `ak-cq` collapses the element to the width of its padding. Put `ak-cq`
+  on an element whose width comes from its parent — a block, a column, a flex item
+  with `ak-flex-1`.
+- **Child margins stay inside it.** The new formatting context stops the first and
+  last child's block margins collapsing through the container. Because the reset keeps
+  the UA's block-end margins, the space under the last paragraph of an `ak-cq` box
+  stays inside that box. Use `ak-flow` on the box, or `ak-mb-0` on the last child, when
+  that matters.
+- **Nested `ak-cq` elements shadow each other.** `-c-*` variants always query the
+  nearest `ak-cq` ancestor; there is no way to query one further out.
+
+**`ak-fixed` and `ak-absolute` are not affected.** Early container-query drafts also
+applied layout containment, which made the container the containing block for
+fixed- and absolute-positioned descendants. The current specification does not, and
+current Chrome, Safari and Firefox position an `ak-fixed` element inside `ak-cq`
+against the viewport. Browsers at the support floor have not been verified yet; the
+playground's containment page is a live test for any browser. If a fixed element is
+pinned to its container there, move it outside the `ak-cq`.
 
 ## Class reference
 

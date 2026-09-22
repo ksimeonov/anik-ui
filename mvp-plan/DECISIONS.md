@@ -415,6 +415,25 @@ After releasing, the same job merges `main` back into `dev`, keeping D-044's "de
 descendant of main" true. `HUSKY=0` in the job keeps the local hooks from running on the
 bot's commits.
 
+### D-046 — `ak-cq` applies no layout containment; the `ak-fixed` caveat is withdrawn
+Spec 02 and the README said `container-type: inline-size` applies layout containment,
+so `ak-fixed` / `ak-absolute` inside `ak-cq` would be positioned against the container.
+That followed early container-query drafts. The current specification (CSS Conditional
+5) applies only **style and inline-size containment** plus an **independent formatting
+context**.
+
+Measured 2026-09-22 in Chromium 151, WebKit 26.5 and Firefox 153 (table in spec 02): a
+fixed element inside `ak-cq` stays on the viewport and an absolute one uses the outer
+positioned ancestor, while a `contain: layout` control on the same markup captures the
+fixed element — so the test is sound. The shrink-to-fit collapse still reproduces, and
+a previously undocumented effect does too: child margins no longer collapse through the
+container, which matters because the reset keeps block-end margins (D-042).
+
+The README section becomes "`ak-cq` side effects": shrink-to-fit, margin collapsing,
+nesting, plus a note that positioned descendants are unaffected in current engines. The
+support-floor versions (D-027) are unverified; `playground/containment.html` is the
+live test, and the README tells consumers what to do if a floor browser does capture.
+
 ## Unresolved
 
 - [ ] **Reserve the npm name** — availability confirmed (D-018, 2026-09-07: `anik-ui`
