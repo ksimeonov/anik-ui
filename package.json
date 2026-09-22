@@ -54,6 +54,7 @@
     "build": "npm run build:expanded && npm run build:min",
     "build:expanded": "sass --style=expanded --source-map --load-path=src/scss src/scss/index.scss:dist/anik-ui.css src/scss/reset.scss:dist/anik-reset.css",
     "build:min": "cd dist && lightningcss --minify --sourcemap --targets 'chrome 111, firefox 113, safari 16.4' anik-ui.css -o anik-ui.min.css && lightningcss --minify --sourcemap --targets 'chrome 111, firefox 113, safari 16.4' anik-reset.css -o anik-reset.min.css",
+    "build:site": "node scripts/build-site.mjs",
     "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
     "lint": "stylelint \"src/**/*.scss\"",
     "lint:fix": "stylelint --fix \"src/**/*.scss\"",

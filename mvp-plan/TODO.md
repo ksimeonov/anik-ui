@@ -47,7 +47,9 @@ Legend:
 - [x] **Verify npm package name availability and reserve it** — decision rule in D-018.
       Availability verified 2026-09-07; **reserved 2026-09-22** by publishing the
       `reserve/` placeholder as `anik-ui@0.0.1` (maintainer `ksimeonov`, 2FA on).
-      Trademark / similar-package scan (D-018 step 4) still outstanding.
+      Similar-package scan done 2026-09-22: finds a prefix overlap with
+      `@yunyoujun/ak-ui` (decision open, see DECISIONS "Unresolved"). Trademark half
+      of D-018 step 4 still outstanding.
 
 ## Phase 1 — Repository bootstrap
 
@@ -110,9 +112,9 @@ counterpart are provably identical apart from the at-rule wrapper.
 - [x] Fluid display type `ak-text-3xl`…`6xl`, `ak-tracking-*`, `ak-measure`,
       `ak-flow`, `ak-section` (D-043) — incl. a 280–2560px no-inversion sweep test
 
-Tests (`node --test`, 35 passing): API snapshot (`api/classes.txt`, 416),
+Tests (`node --test`, 40 passing): API snapshot (`api/classes.txt`, 416),
 declaration tests (spec 11 §2), emission-order test (§3), reset tests, source-map
-test (D-047), size-budget
+test (D-047), playground-class test, size-budget
 test (§4 — `anik-ui.min.css` 3.3 KB gz / 25 KB, `anik-reset.min.css` 0.5 KB gz / 2 KB;
 measured 2026-09-21).
 
@@ -207,7 +209,10 @@ Acceptance gates, not activities. Each has a pass condition.
       `NPM_TOKEN` secret in the `release` environment. Then set Publishing access to
       "Require two-factor authentication and disallow tokens"
 - [x] Enable provenance — automatic with trusted publishing (`id-token: write`)
-- [ ] Deploy playground to GitHub Pages from CI
+- [~] Deploy playground to GitHub Pages from CI — `pages` job in `release.yml` after
+      the release job; `npm run build:site` assembles `_site/` (verified locally under
+      `/anik-ui/`). Pages enabled (Actions source); the `github-pages` environment
+      deploys from `main` only. First real deploy happens with the first release
 - [ ] Switch the GitHub default branch back to `main` — set to `dev` until the first
       release, because `main` still holds only GitLab's template README. The `main`
       ruleset targets `refs/heads/main` by name, so the switch does not move it
@@ -248,7 +253,7 @@ repo; **Maintainer** steps need npm / GitHub / GitLab access or a human eye.
    Chromium 111, Firefox 113, WebKit 16.4 via Playwright 1.31 / 1.34; below floor:
    Chromium 104, Firefox 102 via 1.24. Found the containment caveat is real at the
    floor. Real Safari 16.4 / iOS Safari stay a maintainer check.
-4. **Agent — docs and hygiene PR:** the 11-gaps minimum-width note in the README;
+4. **Agent — docs and hygiene PR** — **done 2026-09-22**: the 11-gaps minimum-width note in the README;
    stale D-024 count (406 → 416) and README "being implemented" status; playground
    deployed to GitHub Pages from the release workflow, plus the README link; a test
    that fails when the playground uses a class not in `api/classes.txt`;

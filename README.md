@@ -10,9 +10,12 @@ alignment, typography, sizing and positioning utilities.
   the test suite (`npm test`).
 - **No unexpected global styles.** The reset is opt-in and never auto-enabled.
 
-> **Status: pre-release.** The class API is being implemented against
-> [`mvp-plan/15-class-api-matrix.md`](mvp-plan/15-class-api-matrix.md). The first
-> published version will be `0.1.0`. While in `0.x`, class names may still move.
+> **Status: `0.x`.** The full class API in
+> [`mvp-plan/15-class-api-matrix.md`](mvp-plan/15-class-api-matrix.md) is implemented and
+> tested. While in `0.x`, class names may still move; the first stable API is `1.0.0`.
+>
+> **[Live playground](https://ksimeonov.github.io/anik-ui/)** — every utility on one
+> page, rebuilt from `main` on each release.
 
 ## Install
 
@@ -178,6 +181,11 @@ change across breakpoints, drive the token from your own stylesheet:
 ```html
 <div class="ak-row card-grid">…</div>
 ```
+
+Mind the width a large gap costs: a 12-track row always has 11 gaps, even when every
+child spans all 12 columns. At `--ak-space-3xl` (64px) the row needs 704px before any
+content and overflows a phone screen, so keep wide gaps behind a breakpoint like the
+one above.
 
 ## Sizing
 

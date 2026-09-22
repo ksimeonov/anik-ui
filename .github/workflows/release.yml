@@ -61,3 +61,34 @@ jobs:
           git switch -c dev origin/dev
           git merge --no-ff --no-edit -m "chore(release): merge main back into dev" origin/main
           git push origin dev
+
+  # The live playground linked from the README (spec 11). Runs only after the release
+  # job succeeds, so the site always matches what main has shipped.
+  pages:
+    name: pages
+    needs: release
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    permissions:
+      contents: read
+      pages: write # publish the Pages deployment
+      id-token: write # verify the deployment's origin
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+        env:
+          HUSKY: 0
+      - run: npm run build
+      - run: npm run build:site
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: _site
+      - id: deploy
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
