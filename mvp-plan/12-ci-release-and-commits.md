@@ -136,6 +136,19 @@ After releasing, the workflow merges `main` back into `dev` so `dev` carries the
 and CHANGELOG commit. If that merge conflicts, the release has already shipped; merge
 `main` into `dev` by hand.
 
+### Recovering a release that was tagged but not published (D-050)
+
+semantic-release pushes the release commit and the tag **before** `npm publish`. If the
+publish step fails, `main` already carries `vX.Y.Z` and re-running does nothing: the
+tag is found and there is nothing new to release. After fixing the cause:
+
+1. Run the **Release** workflow manually on `main` (Actions → Release → Run workflow)
+   with the tag, e.g. `v0.1.0`. Its `publish-tag` job checks the tag is on `main`,
+   matches `package.json` and is not already on npm, builds and tests that exact
+   commit, and publishes it with provenance through the same trusted publisher.
+2. Create the GitHub release for the tag from its `CHANGELOG.md` section.
+3. `dev` is brought up to date and Pages deploys on the next push to `main`.
+
 ## PR checks (required)
 
 ```text
